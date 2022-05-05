@@ -257,15 +257,13 @@ describe("erc-20", () => {
     console.log(deploy_response);
 
     const contract_info = await contract.instantiate(
-      {
-        "decimals": 6,
-        "name": "SampleSnip",
-        "prng_seed": "YWE",
-        "symbol": "SMPL"
-      },
-      "deploy test",
-      contract_owner
-    );
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
     console.log(contract_info);
   });
 });

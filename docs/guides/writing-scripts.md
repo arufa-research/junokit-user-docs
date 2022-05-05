@@ -2,47 +2,53 @@
 
 #### Sample script walkthrough
 
-Polar boilerplate code has sample script `scripts/sample-script.js` with following content: 
+Trestle boilerplate code has sample script `scripts/sample-script.js` with following content: 
 
 ```js
+const { Contract, getAccountByName, getLogs } = require("juno-trestle");
 
-const { Contract, getAccountByName } = require("secret-polar");
-
-async function run () {
+async function run() {
   const contract_owner = getAccountByName("account_0");
-  const contract = new Contract("sample-project");
+  const other = getAccountByName("account_1");
+  const contract = new Contract("cw_erc20");
+  await contract.setUpclient();
   await contract.parseSchema();
+
+  console.log("Client setup done!! ");
 
   const deploy_response = await contract.deploy(
     contract_owner,
     { // custom fees
-      amount: [{ amount: "750000", denom: "uscrt" }],
+      amount: [{ amount: "750000", denom: "ujunox" }],
       gas: "3000000",
     }
   );
   console.log(deploy_response);
 
-  const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
+  const contract_info = await contract.instantiate(
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
   console.log(contract_info);
 
-  const inc_response = await contract.tx.increment({account: contract_owner});
-  console.log(inc_response);
+  let balance_before = await contract.query.balance({ "address": contract_owner.account.address });
+  console.log(balance_before);
 
-  const response = await contract.query.get_count();
-  console.log(response);
-
-  const transferAmount = [{"denom": "uscrt", "amount": "15000000"}] // 15 SCRT
-  const customFees = { // custom fees
-    amount: [{ amount: "750000", denom: "uscrt" }],
-    gas: "3000000",
-  }
-  const ex_response = await contract.tx.increment(
-    {account: contract_owner, transferAmount: transferAmount}
+  let transfer_response = await contract.tx.transfer(
+    { account: contract_owner },
+    {
+      recipient: other.account.address,
+      amount: "50000000"
+    }
   );
-  // const ex_response = await contract.tx.increment(
-  //   {account: contract_owner, transferAmount: transferAmount, customFees: customFees}
-  // );
-  console.log(ex_response);
+  console.log(transfer_response);
+
+  let balance_after = await contract.query.balance({ "address": contract_owner.account.address });
+  console.log(balance_after);
 }
 
 module.exports = { default: run };
@@ -50,13 +56,13 @@ module.exports = { default: run };
 
 Following is a line-by-line breakdown of the above script:
 
-+ Import `Contract` class and `getAccountByName` method from `secret-polar` library.
++ Import `Contract` class and `getAccountByName` method from `juno-trestle` library.
 
 ```js
-const { Contract, getAccountByName } = require("secret-polar");
+const { Contract, getAccountByName } = require("juno-trestle");
 ```
 
-+ `run` function definition. It should have the same signature as below with no argument. This `run` function is called by polar.
++ `run` function definition. It should have the same signature as below with no argument. This `run` function is called by trestle.
 
 ```js
 async function run () {
@@ -74,49 +80,60 @@ async function run () {
   const contract = new Contract('sample-project');
 ```
 
-+ Load schema files for contract `sample-json`. Will generate error if schema files are not present, so make sure to run `polar compile` before running this.
++ Load schema files for contract `sample-json`. Will generate error if schema files are not present, so make sure to run `trestle compile` before running this.
 
 ```js
   await contract.parseSchema();
 ```
 
-+ Deploy the contract. Network is specified in the `polar run scripts/<script-name> --network <network-name>` command.
++ Deploy the contract. Network is specified in the `trestle run scripts/<script-name> --network <network-name>` command.
 
 ```js
   const deploy_response = await contract.deploy(contract_owner);
+``` 
++ Instantiate contract instance with name `{"name": "ERC"}`, symbol `{"symbol": "ER"}`, decimals `{"decimals": 10}` and initial_balances `{"initial_balances": [{"address": contract_owner.account.address, "amount": "100000000"}]}` .
+```js
+  const contract_info = await contract.instantiate(
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
 ```
 
-+ Instantiate contract instance with values `{"count": 102}` and label `"deploy test"` and account `contract_owner`.
++ Execute `transfer()` transaction using account `contract_owner`. For each contract execute method, calling signature is `contract.tx.<method_name>({account: <signing_account>, transferAmount: <tokens_to_send_with_txn>, customFees: <custom_fees_struct>}, ...<method_args>);`.
 
 ```js
-  const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
+  let transfer_response = await contract.tx.transfer(
+    { account: contract_owner },
+    {
+      recipient: other.account.address,
+      amount: "50000000"
+    }
+  );
 ```
 
-+ Execute `increment()` transaction using account `contract_owner`. For each contract execute method, calling signature is `contract.tx.<method_name>({account: <signing_account>, transferAmount: <tokens_to_send_with_txn>, customFees: <custom_fees_struct>}, ...<method_args>);`.
++ Fetch count value using query `balance`.
 
 ```js
-  const ex_response = await contract.tx.increment({account: contract_owner});
+  let balance = await contract.query.balance({ "address": contract_owner.account.address });;
 ```
 
-+ Fetch count value using query `get_count()`.
-
-```js
-  const response = await contract.query.get_count();
-```
-
-+ Export `run` function as default for the script. Default function is called by polar runner.
++ Export `run` function as default for the script. Default function is called by trestle runner.
 
 ```js
 module.exports = { default: run };
 ```
 
-#### Polar Runtime Environment
+#### trestle Runtime Environment
 
-Polar runtime environment is used internally by polar. It is created when a polar task is executed using bash command `polar ...`. It can be accessed in REPL using variable `env`. It has following parameters:
+trestle runtime environment is used internally by trestle. It is created when a trestle task is executed using bash command `trestle ...`. It can be accessed in REPL using variable `env`. It has following parameters:
 
 + **config**: Has paths of config file, contract sources, artifacts, project root and test path. Other config values such as networks config and mocha timeout.
 
-+ **runtimeArgs**: Runtime metadata such as network to use etc. Network can be specified in a polar command like `polar ... --network <network-name>`.
++ **runtimeArgs**: Runtime metadata such as network to use etc. Network can be specified in a trestle command like `trestle ... --network <network-name>`.
 
 + **tasks**: List of available tasks with details.
 
@@ -165,7 +182,14 @@ Gives following response:
 Instantiate the contract.
 
 ```js
-const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
+const contract_info = await contract.instantiate(
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
 ```
 
 Gives following response:
@@ -182,8 +206,8 @@ Gives following response:
 To list contract's execute methods, print `contract.tx`.
 
 ```js
-polar> contract.tx
-{ increment: [Function (anonymous)], reset: [Function (anonymous)] }
+trestle> contract.tx
+{ Approve: [Function (anonymous)], Transfer: [Function (anonymous), TransferFrom: [Function (anonymous), Burn: [Function (anonymous)] }
 ```
 
 **query methods**
@@ -191,25 +215,25 @@ polar> contract.tx
 To list contract's query methods, print `contract.query`.
 
 ```js
-polar> contract.query
-{ get_count: [Function (anonymous)] }
+trestle> contract.query
+{ Balance: [Function (anonymous), Allowance: [Function (anonymous)] }
 ```
 
 #### getAccountByName
 
-In the sample `polar.config.js` file, the accounts are defined as below:
+In the sample `trestle.config.js` file, the accounts are defined as below:
 
 ```js
 const accounts = [
   {
     name: 'account_0',
-    address: 'secret1l0g5czqw7vjvd20ezlk4x7ndgyn0rx5aumr8gk',
-    mnemonic: 'snack cable erode art lift better october drill hospital clown erase address'
+    address: 'juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5',
+    mnemonic: 'omit sphere nurse rib tribe suffer web account catch brain hybrid zero act gold coral shell voyage matter nose stick crucial fog judge text'
   },
   {
     name: 'account_1',
-    address: 'secret1ddfphwwzqtkp8uhcsc53xdu24y9gks2kug45zv',
-    mnemonic: 'sorry object nation also century glove small tired parrot avocado pulp purchase'
+    address: 'juno1njamu5g4n0vahggrxn4ma2s4vws5x4w3u64z8h',
+    mnemonic: 'student prison fresh dwarf ecology birth govern river tissue wreck hope autumn basic trust divert dismiss buzz play pistol focus long armed flag bicycle'
   }
 ];
 ```
@@ -217,22 +241,22 @@ const accounts = [
 These accounts can be easily accessed inside the scripts or in repl using the method, `getAccountByName(<account_name>)`, for example:
 
 ```js
-const { getAccountByName } = require("secret-polar");
+const { getAccountByName } = require("juno-trestle");
 
 const account_0 = getAccountByName("account_0");
 const account_1 = getAccountByName("account_1");
 
 console.log(account_0.name);  // account_0
-console.log(account_0.address); // secret1l0g5czqw7vjvd20ezlk4x7ndgyn0rx5aumr8gk
-console.log(account_0.mnemonic); // snack cable erode art lift better october drill hospital clown erase address
+console.log(account_0.address); // juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5
+console.log(account_0.mnemonic); // omit sphere nurse rib tribe suffer web account catch brain hybrid zero act gold coral shell voyage matter nose stick crucial fog judge text
 ```
 
 #### createAccounts
 
-This method is used to generate new accounts and then can be filled with some balance using a testnet faucet `https://faucet.supernova.enigma.co/` (faucet are only for testnets). 
+This method is used to generate new accounts and then can be filled with some balance using a testnet faucet `https://stakely.io/en/faucet/juno` (faucet are only for testnets). 
 
 ```js
-const { createAccounts } = require("secret-polar");
+const { createAccounts } = require("juno-trestle");
 
 const res = await createAccounts(1); // array of one account object
 const res = await createAccounts(3);  // array of three account objects
@@ -242,6 +266,6 @@ const res = await createAccounts(3);  // array of three account objects
 
 Checkpoints store the metadata of contract instance on the network. It stores the deploy metadata (codeId, contractCodeHash, deployTimestamp) and instantiate metadata (contractAddress, instantiateTimestamp). This comes handy when a script is run which deploys, inits and does some interactions with the contracts. 
 
-Suppose the script fails after init step and now script is to be rerun after some fixes in the contract, here one does not want for the contract to be deployed and instantiated again, so polar picks up the saved metadata from checkpoints file and directly skips to part after init and uses the previously deployed instance and user does not have to pay the extra gas and wait extra time to deploy, init the contract again. Same happens when there is error before init and rerun skips deploy and directly executes init step.
+Suppose the script fails after init step and now script is to be rerun after some fixes in the contract, here one does not want for the contract to be deployed and instantiated again, so trestle picks up the saved metadata from checkpoints file and directly skips to part after init and uses the previously deployed instance and user does not have to pay the extra gas and wait extra time to deploy, init the contract again. Same happens when there is error before init and rerun skips deploy and directly executes init step.
 
-To skip using checkpoints when running script, use `polar run <script-path> --skip-checkpoints`.
+To skip using checkpoints when running script, use `trestle run <script-path> --skip-checkpoints`.

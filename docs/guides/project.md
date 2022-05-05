@@ -2,27 +2,27 @@
 
 ### Setting up a project
 
-Project setup can be broken down to 3 steps broadly, which are boiler plate generation, updating project name and updating `polar.config.js` file.
+Project setup can be broken down to 3 steps broadly, which are boiler plate generation, updating project name and updating `trestle.config.js` file.
 
 #### Boilerplate code
 
-Use command `polar init <project-name>` to generate boilerplate code. Use command `polar init <project-name> <template-name>` to generate boilerplate code using a particular template (template names can be found from repository `https://github.com/arufa-research/polar-templates`).
+Use command `trestle init <project-name>` to generate boilerplate code. Use command `trestle init <project-name> <template-name>` to generate boilerplate code using a particular template (template names can be found from repository `https://github.com/arufa-research/trestle-templates`).
 
 ```bash
-$ polar init yellow
-★ Welcome to polar v0.9.5
-Initializing new project in /home/uditgulati/yellow.
+$ trestle init yellow
+★ Welcome to trestle v0.1.1
+Initializing new project in /home/adarsh/Desktop/yellow.
 
 ★ Project created ★
 
 You need to install these dependencies to run the sample project:
-  npm install --save-dev chai
+  npm install --global --save-dev chai
 
-Success! Created project at /home/uditgulati/yellow.
+Success! Created project at /home/adarsh/Desktop/yellow.
 Begin by typing:
   cd yellow
-  npx polar help
-  npx polar compile
+  trestle help
+  trestle compile
 ```
 
 The generated directory will have the following initial structure:
@@ -34,33 +34,23 @@ The generated directory will have the following initial structure:
 │   ├── Cargo.toml
 │   ├── examples
 │   │   └── schema.rs
-│   ├── src
-│   │   ├── contract.rs
-│   │   ├── lib.rs
-│   │   ├── msg.rs
-│   │   └── state.rs
-│   └── tests
-│       └── integration.rs
+│   └── src
+│       ├── contract.rs
+│       ├── error.rs
+│       ├── lib.rs
+│       ├── msg.rs
+│       └── state.rs
 ├── package.json
-├── packages
-│   └── cargo_common
-│       ├── Cargo.lock
-│       ├── Cargo.toml
-│       └── src
-│           ├── balances.rs
-│           ├── cashmap.rs
-│           ├── contract.rs
-│           ├── lib.rs
-│           ├── tokens.rs
-│           └── voting.rs
-├── polar.config.js
+├── Cargo.toml
+├── Cargo.lock
+├── Trestle.config.js
 ├── README.md
 ├── scripts
 │   └── sample-script.js
 └── test
     └── sample-test.js
 
-9 directories, 22 files
+5 directories, 15 files
 ```
 
 The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory can contain `.js` and `.ts` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory can contain `.js` and `.ts` scripts to run tests for the deployed contracts.
@@ -79,8 +69,8 @@ scripts/sample-script.js:  const contract = new Contract('sample-project');
 
 ```bash
 $ grep -r "sample_project"
-contracts/examples/schema.rs:use sample_project::msg::{CountResponse, HandleMsg, InitMsg, QueryMsg};
-contracts/examples/schema.rs:use sample_project::state::State;
+contracts/examples/schema.rs:use sample_project::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, BalanceResponse, AllowanceResponse};
+contracts/examples/schema.rs:use sample_project::state::Constants;
 ```
 
 Replacing them with a project name suppose `yellow` should look like following:
@@ -90,31 +80,31 @@ $ grep -r "yellow"
 package.json:  "name": "yellow",
 contracts/Cargo.lock:name = "yellow"
 contracts/Cargo.toml:name = "yellow"
-contracts/examples/schema.rs:use yellow::msg::{CountResponse, HandleMsg, InitMsg, QueryMsg};
-contracts/examples/schema.rs:use yellow::state::State;
+contracts/examples/schema.rs:use yellow::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, BalanceResponse, AllowanceResponse};
+contracts/examples/schema.rs:use yellow::state::Constants;
 scripts/sample-script.js:  const contract = new Contract('yellow', runtimeEnv);
 ```
 
-Now compiling using `polar compile` would create following structure in `artifacts/` dir:
+Now compiling using `trestle compile` would create following structure in `artifacts/` dir:
 
 ```bash
 artifacts/
 ├── contracts
 │   └── yellow.wasm
 └── schema
-    └── yellow
-        ├── count_response.json
-        ├── handle_msg.json
-        ├── init_msg.json
-        ├── query_msg.json
-        └── state.json
+    └── allowance_response.json
+    └── balance_response.json
+    └── constants.json
+    └── execute_msg.json
+    └── instantiate_msg.json
+    └── query_msg.json
 
-3 directories, 6 files
+2 directories, 7 files
 ```
 
-#### Polar config
+#### trestle config
 
-Polar uses config file `polar.config.js` to execute tasks for the given project. Initial contents of `polar.config.js` file are explained below:
+trestle uses config file `trestle.config.js` to execute tasks for the given project. Initial contents of `trestle.config.js` file are explained below:
 
 **Network config**. Has following parameters:
 
@@ -127,25 +117,25 @@ Polar uses config file `polar.config.js` to execute tasks for the given project.
 
 ```js
 networks: {
-  // Supernova Testnet
-    testnet: {
-      endpoint: 'http://bootstrap.supernova.enigma.co:1317',
-      chainId: 'supernova-2',
-      trustNode: true,
-      keyringBackend: 'test',
-      accounts: accounts,
-      types: {},
-      fees: {
-        upload: {
-            amount: [{ amount: "500000", denom: "uscrt" }],
-            gas: "2000000",
-        },
-        init: {
-            amount: [{ amount: "125000", denom: "uscrt" }],
-            gas: "500000",
-        },
-      }
+  // uni-2
+  testnet: {
+    endpoint: 'https://rpc.uni.juno.deuslabs.fi/',//https://lcd.uni.juno.deuslabs.fi/
+    chainId: 'uni-2',
+    trustNode: true,
+    keyringBackend: 'test',
+    accounts: accounts,
+    types: {},
+    fees: {
+      upload: {
+          amount: [{ amount: "500000", denom: "ujunox" }],
+          gas: "2000000",
+      },
+      init: {
+          amount: [{ amount: "125000", denom: "ujunox" }],
+          gas: "500000",
+      },
     }
+  }
 }
 ```
 
@@ -159,13 +149,13 @@ networks: {
 const accounts = [
   {
     name: 'account_0',
-    address: 'secret1l0g5czqw7vjvd20ezlk4x7ndgyn0rx5aumr8gk',
-    mnemonic: 'snack cable erode art lift better october drill hospital clown erase address'
+    address: 'juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5',
+    mnemonic: 'omit sphere nurse rib tribe suffer web account catch brain hybrid zero act gold coral shell voyage matter nose stick crucial fog judge text'
   },
   {
     name: 'account_1',
-    address: 'secret1ddfphwwzqtkp8uhcsc53xdu24y9gks2kug45zv',
-    mnemonic: 'sorry object nation also century glove small tired parrot avocado pulp purchase'
+    address: 'juno1njamu5g4n0vahggrxn4ma2s4vws5x4w3u64z8h',
+    mnemonic: 'student prison fresh dwarf ecology birth govern river tissue wreck hope autumn basic trust divert dismiss buzz play pistol focus long armed flag bicycle'
   }
 ];
 ```

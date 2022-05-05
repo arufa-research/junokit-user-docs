@@ -2,40 +2,44 @@
 
 ## Overview
 
-Polar is development framework for building secret contracts. The aim of the project is to make Secret contracts development process simple, efficient and scalable. User can focus on logic of secret contract and not much about further steps in development. It facilitates features such as initiating project repo from contract templates, easy compilation of contracts, deployment and contract testing framework.
+Trestle is a development framework for building juno contracts. The aim of the project is to make juno contracts development process simple, efficient and scalable. User can focus on logic of juno contract and not much about further steps in development. It facilitates features such as initiating project repo from contract templates, easy compilation of contracts, deployment, Interacting with contracts using schema and contract testing framework.
 
 ## Installation
 
-Polar can be installed using `npm` or `yarn` using below commands:
+Trestle can be installed using `npm` or `yarn` using below commands:
 
-+    Using Yarn: `yarn global add secret-polar`
-+    Using NPM: `npm install -g secret-polar`
++    Using Yarn: `yarn global add juno-trestle`
++    Using NPM: `npm install -g juno-trestle`
 
-Polar requires a local rust environment available to be able to work. To install a rust environment, use command `polar install`.
+Trestle requires a local rust environment available to be able to work. To install a rust environment, use command .
+```bash
+`$ cd infrastructure`
+`$ make setup-rust`
+```
 
 ## Quick Start
 
-This guide will explore the basics of creating a simple Polar project.
+This guide will explore the basics of creating a simple Trestle project.
 
-Polar allows you to compile your Rust code, generate schema for it, run your scripts, tests and deploy to network, interact with contract instance on the network.
+Trestle allows you to compile your Rust code, generate schema for it, run your scripts, tests and deploy to network, interact with contract instance on the network.
 
-To create your Polar project, run `polar init <project-name>`:
+To create your Trestle project, run `trestle init <project-name>`:
 
 ```bash
-$ polar init yellow
-★ Welcome to polar v0.9.5
-Initializing new project in /home/uditgulati/yellow.
+$ trestle init yellow
+★ Welcome to trestle v0.1.1
+Initializing new project in /home/adarsh/Desktop/yellow.
 
 ★ Project created ★
 
 You need to install these dependencies to run the sample project:
-  npm install --save-dev chai
+  npm install --global --save-dev chai
 
-Success! Created project at /home/uditgulati/yellow.
+Success! Created project at /home/adarsh/Desktop/yellow.
 Begin by typing:
   cd yellow
-  npx polar help
-  npx polar compile
+  trestle help
+  trestle compile
 ```
 
 The generated directory will have the following initial structure:
@@ -47,53 +51,45 @@ The generated directory will have the following initial structure:
 │   ├── Cargo.toml
 │   ├── examples
 │   │   └── schema.rs
-│   ├── src
-│   │   ├── contract.rs
-│   │   ├── lib.rs
-│   │   ├── msg.rs
-│   │   └── state.rs
-│   └── tests
-│       └── integration.rs
+│   └── src
+│       ├── contract.rs
+│       ├── error.rs
+│       ├── lib.rs
+│       ├── msg.rs
+│       └── state.rs
 ├── package.json
-├── packages
-│   └── cargo_common
-│       ├── Cargo.lock
-│       ├── Cargo.toml
-│       └── src
-│           ├── balances.rs
-│           ├── cashmap.rs
-│           ├── contract.rs
-│           ├── lib.rs
-│           ├── tokens.rs
-│           └── voting.rs
-├── polar.config.js
+├── Cargo.toml
+├── Cargo.lock
+├── Trestle.config.js
 ├── README.md
 ├── scripts
 │   └── sample-script.js
 └── test
     └── sample-test.js
 
-9 directories, 22 files
+5 directories, 15 files
 ```
 
 The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory can contain `.js` and `.ts` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory can contain `.js` and `.ts` scripts to run tests for the deployed contracts.
 
 #### Listing tasks
 
-To see the possible tasks (commands) that are available, run `polar` in your project's folder:
+To see the possible tasks (commands) that are available, run `trestle` in your project's folder:
 
 ```bash
-$ polar
-polar version 0.9.5
+$ trestle
+trestle version 0.1.1
 
-Usage: polar [GLOBAL OPTIONS] <TASK> [TASK OPTIONS]
+Usage: trestle [GLOBAL OPTIONS] <TASK> [TASK OPTIONS]
 
 GLOBAL OPTIONS:
 
-      --config           	Path to POLAR config file. 
+      --command          	Name of trestle task ran. (default: "")
+      --config           	Path to trestle config file. 
   -h, --help             	Shows this message, or a task's help if its name is provided 
       --network          	The network to connect to. (default: "default")
       --show-stack-traces	Show stack traces. 
+      --use-checkpoints  	Specify if checkpoints should be used. 
       --verbose          	Enables verbose logging 
   -v, --version          	Shows version and exit. 
 
@@ -106,69 +102,56 @@ AVAILABLE TASKS:
   init     	Initializes a new project in the given directory
   install  	Setup rust compiler
   node-info	Prints node info and status
-  repl     	Opens polar console
+  repl     	Opens trestle console
   run      	Runs a user-defined script after compiling the project
   test     	Runs a user-defined test script after compiling the project
 
-To get help for a specific task run: polar help [task]
+To get help for a specific task run: trestle help [task]
 
 ```
 
 This is the list of built-in tasks. This is your starting point to find out what tasks are available to run.
 
-If you take a look at the `polar.config.js` file, you will find :
+If you take a look at the `trestle.config.js` file, you will find :
 
 ```js
 const accounts = [
   {
     name: 'account_0',
-    address: 'secret1l0g5czqw7vjvd20ezlk4x7ndgyn0rx5aumr8gk',
-    mnemonic: 'snack cable erode art lift better october drill hospital clown erase address'
+    address: 'juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5',
+    mnemonic: 'omit sphere nurse rib tribe suffer web account catch brain hybrid zero act gold coral shell voyage matter nose stick crucial fog judge text'
   },
   {
     name: 'account_1',
-    address: 'secret1ddfphwwzqtkp8uhcsc53xdu24y9gks2kug45zv',
-    mnemonic: 'sorry object nation also century glove small tired parrot avocado pulp purchase'
+    address: 'juno1njamu5g4n0vahggrxn4ma2s4vws5x4w3u64z8h',
+    mnemonic: 'student prison fresh dwarf ecology birth govern river tissue wreck hope autumn basic trust divert dismiss buzz play pistol focus long armed flag bicycle'
   }
 ];
+// TODO: update fixture tests
+const networks = {
+  localnet: {
+    endpoint: 'http://localhost:26657/'
+  },
+  // uni-2
+  testnet: {
+    endpoint: 'https://rpc.uni.juno.deuslabs.fi/',//https://lcd.uni.juno.deuslabs.fi/
+    chainId: 'uni-2',
+    trustNode: true,
+    keyringBackend: 'test',
+    accounts: accounts,
+  },
+};
 
 module.exports = {
   networks: {
-    default: {
-      endpoint: 'http://localhost:1337/'
-    },
-    development: {
-      endpoint: 'tcp://0.0.0.0:26656',
-      nodeId: '115aa0a629f5d70dd1d464bc7e42799e00f4edae',
-      chainId: 'enigma-pub-testnet-3',
-      keyringBackend: 'test',
-      types: {}
-    },
-    // Supernova Testnet
-    testnet: {
-      endpoint: 'http://bootstrap.supernova.enigma.co:1317',
-      chainId: 'supernova-2',
-      trustNode: true,
-      keyringBackend: 'test',
-      accounts: accounts,
-      types: {},
-      fees: {
-        upload: {
-            amount: [{ amount: "500000", denom: "uscrt" }],
-            gas: "2000000",
-        },
-        init: {
-            amount: [{ amount: "125000", denom: "uscrt" }],
-            gas: "500000",
-        },
-      }
-    }
+    default: networks.testnet,
+    localnet: networks.localnet,
   },
   mocha: {
     timeout: 60000
   },
   rust: {
-    version: "1.55.0"
+    version: "1.59.0",
   }
 };
 ```
@@ -177,68 +160,182 @@ module.exports = {
 
 #### Compiling contracts
 
-To compile the contracts, use command `polar compile`. This will compile all the contracts in the project. To compile only one contracts or a subset of all contracts in the project, use command `polar compile <contract-source-dir>`. To skip schema generation while compiling use `polar compile --skip-schema`.
+To compile the contracts, use command `trestle compile`. This will compile all the contracts in the project. To compile only one contracts or a subset of all contracts in the project, use command `trestle compile <contract-source-dir>`. To skip schema generation while compiling use `trestle compile --skip-schema`.
 
 ```bash
-$ polar compile
-Compiling contract in directory: contracts
-   Compiling proc-macro2 v1.0.28
-   Compiling unicode-xid v0.2.2
-   Compiling syn v1.0.74
-   Compiling serde_derive v1.0.127
-   Compiling serde v1.0.127
-   Compiling ryu v1.0.5
-   Compiling serde_json v1.0.66
-   Compiling schemars v0.7.6
-   Compiling doc-comment v0.3.3
-   Compiling itoa v0.4.7
-   Compiling base64 v0.11.0
-   Compiling quote v1.0.9
+$ trestle compile
+🛠 Compiling your contract in directory: contracts
+===========================================
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/adarsh/Desktop/yellow/contracts/Cargo.toml
+workspace: /home/adarsh/Desktop/yellow/Cargo.toml
+   Compiling proc-macro2 v1.0.37
+   Compiling unicode-xid v0.2.3
+   Compiling syn v1.0.92
+   Compiling serde_derive v1.0.137
+   Compiling serde v1.0.137
+   Compiling serde_json v1.0.81
+   Compiling crunchy v0.2.2
+   Compiling ryu v1.0.9
+   Compiling itoa v1.0.1
+   Compiling schemars v0.8.8
+   Compiling static_assertions v1.1.0
+   Compiling byteorder v1.4.3
+   Compiling hex v0.4.3
+   Compiling dyn-clone v1.0.5
+   Compiling forward_ref v1.0.0
+   Compiling base64 v0.13.0
+   Compiling uint v0.9.3
+   Compiling quote v1.0.18
    Compiling serde_derive_internals v0.25.0
-   Compiling schemars_derive v0.7.6
-   Compiling snafu-derive v0.6.10
-   Compiling snafu v0.6.10
-   Compiling serde-json-wasm v0.2.3
-   Compiling cosmwasm-std v0.10.0 (https://github.com/enigmampc/SecretNetwork?tag=v1.0.4-debug-print#004c6bca)
-   Compiling cosmwasm-schema v0.10.0 (https://github.com/enigmampc/SecretNetwork?tag=v1.0.4-debug-print#004c6bca)
-   Compiling cosmwasm-storage v0.10.0 (https://github.com/enigmampc/SecretNetwork?tag=v1.0.4-debug-print#004c6bca)
-   Compiling sample-project v0.1.0 (/home/uditgulati/yellow/contracts)
-    Finished release [optimized] target(s) in 41.23s
+   Compiling thiserror-impl v1.0.31
+   Compiling schemars_derive v0.8.8
+   Compiling cosmwasm-derive v1.0.0-beta8
+   Compiling thiserror v1.0.31
+   Compiling serde-json-wasm v0.3.2
+   Compiling cosmwasm-std v1.0.0-beta8
+   Compiling cosmwasm-storage v1.0.0-beta8
+   Compiling cw-erc20 v0.10.0 (/home/adarsh/Desktop/yellow/contracts)
+    Finished release [optimized] target(s) in 51.34s
 Creating schema for contract in directory: contracts
-   Compiling proc-macro2 v1.0.28
-   Compiling unicode-xid v0.2.2
-   Compiling syn v1.0.74
-   Compiling serde_derive v1.0.127
-   Compiling serde v1.0.127
-   Compiling ryu v1.0.5
-   Compiling serde_json v1.0.66
-   Compiling schemars v0.7.6
-   Compiling doc-comment v0.3.3
-   Compiling itoa v0.4.7
-   Compiling base64 v0.11.0
-   Compiling quote v1.0.9
-   Compiling serde_derive_internals v0.25.0
-   Compiling schemars_derive v0.7.6
-   Compiling snafu-derive v0.6.10
-   Compiling snafu v0.6.10
-   Compiling serde-json-wasm v0.2.3
-   Compiling cosmwasm-std v0.10.0 (https://github.com/enigmampc/SecretNetwork?tag=v1.0.4-debug-print#004c6bca)
-   Compiling cosmwasm-schema v0.10.0 (https://github.com/enigmampc/SecretNetwork?tag=v1.0.4-debug-print#004c6bca)
-   Compiling cosmwasm-storage v0.10.0 (https://github.com/enigmampc/SecretNetwork?tag=v1.0.4-debug-print#004c6bca)
-   Compiling sample-project v0.1.0 (/home/uditgulati/yellow/contracts)
-    Finished dev [unoptimized + debuginfo] target(s) in 22.21s
-     Running `target/debug/examples/schema`
-Created /home/uditgulati/yellow/contracts/schema/init_msg.json
-Created /home/uditgulati/yellow/contracts/schema/handle_msg.json
-Created /home/uditgulati/yellow/contracts/schema/query_msg.json
-Created /home/uditgulati/yellow/contracts/schema/state.json
-Created /home/uditgulati/yellow/contracts/schema/count_response.json
-Copying file sample_project.wasm from contracts/target/wasm32-unknown-unknown/release/ to artifacts/contracts
-Copying file count_response.json from contracts/schema to artifacts/schema/sample_project
-Copying file handle_msg.json from contracts/schema to artifacts/schema/sample_project
-Copying file init_msg.json from contracts/schema to artifacts/schema/sample_project
-Copying file query_msg.json from contracts/schema to artifacts/schema/sample_project
-Copying file state.json from contracts/schema to artifacts/schema/sample_project
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /home/adarsh/Desktop/yellow/contracts/Cargo.toml
+workspace: /home/adarsh/Desktop/yellow/Cargo.toml
+   Compiling cfg-if v1.0.0
+   Compiling once_cell v1.10.0
+   Compiling subtle v2.4.1
+   Compiling adler v1.0.2
+   Compiling smallvec v1.8.0
+   Compiling seahash v4.1.0
+   Compiling gimli v0.26.1
+   Compiling rustc-demangle v0.1.21
+   Compiling zeroize v1.4.3
+   Compiling more-asserts v0.2.2
+   Compiling const-oid v0.6.2
+   Compiling wasmparser v0.78.2
+   Compiling scopeguard v1.1.0
+   Compiling cpufeatures v0.2.2
+   Compiling either v1.6.1
+   Compiling opaque-debug v0.3.0
+   Compiling rustc-hash v1.1.0
+   Compiling stable_deref_trait v1.2.0
+   Compiling fallible-iterator v0.2.0
+   Compiling itoa v1.0.1
+   Compiling hex v0.4.3
+   Compiling ryu v1.0.9
+   Compiling dyn-clone v1.0.5
+   Compiling pin-project-lite v0.2.9
+   Compiling remove_dir_all v0.5.3
+   Compiling static_assertions v1.1.0
+   Compiling fastrand v1.7.0
+   Compiling leb128 v0.2.5
+   Compiling forward_ref v1.0.0
+   Compiling base64 v0.13.0
+   Compiling clru v0.4.0
+   Compiling parity-wasm v0.42.2
+   Compiling tracing-core v0.1.26
+   Compiling libloading v0.7.3
+   Compiling miniz_oxide v0.5.1
+   Compiling cranelift-bforest v0.76.0
+   Compiling der v0.4.5
+   Compiling libc v0.2.125
+   Compiling typenum v1.15.0
+   Compiling crc32fast v1.3.2
+   Compiling memchr v2.5.0
+   Compiling target-lexicon v0.12.3
+   Compiling crossbeam-utils v0.8.8
+   Compiling log v0.4.17
+   Compiling crunchy v0.2.2
+   Compiling memoffset v0.6.5
+   Compiling getrandom v0.2.6
+   Compiling region v3.0.0
+   Compiling memmap2 v0.5.3
+   Compiling getrandom v0.1.16
+   Compiling num_cpus v1.13.1
+   Compiling tempfile v3.3.0
+   Compiling which v4.2.5
+   Compiling spki v0.4.1
+   Compiling generic-array v0.14.5
+   Compiling regalloc v0.0.31
+   Compiling crossbeam-channel v0.5.4
+   Compiling uint v0.9.3
+   Compiling addr2line v0.17.0
+   Compiling crossbeam-epoch v0.9.8
+   Compiling ahash v0.7.6
+   Compiling rand_core v0.6.3
+   Compiling rand_core v0.5.1
+   Compiling pkcs8 v0.7.6
+   Compiling digest v0.9.0
+   Compiling crypto-mac v0.11.1
+   Compiling block-buffer v0.9.0
+   Compiling hashbrown v0.11.2
+   Compiling hashbrown v0.12.1
+   Compiling ff v0.10.1
+   Compiling crypto-bigint v0.2.11
+   Compiling crossbeam-deque v0.8.1
+   Compiling serde v1.0.137
+   Compiling thiserror v1.0.31
+   Compiling ptr_meta v0.1.4
+   Compiling enum-iterator v0.7.0
+   Compiling tracing v0.1.34
+   Compiling signature v1.3.2
+   Compiling curve25519-dalek v3.2.0
+   Compiling sha2 v0.9.9
+   Compiling hmac v0.11.0
+   Compiling group v0.10.0
+   Compiling rayon-core v1.9.2
+   Compiling dynasmrt v1.2.3
+   Compiling bytecheck v0.6.8
+   Compiling elliptic-curve v0.10.6
+   Compiling enumset v1.0.11
+   Compiling rayon v1.5.2
+   Compiling ecdsa v0.12.4
+   Compiling rend v0.3.6
+   Compiling k256 v0.9.6
+   Compiling indexmap v1.8.1
+   Compiling serde_bytes v0.11.6
+   Compiling serde_json v1.0.81
+   Compiling ed25519-zebra v3.0.0
+   Compiling serde-json-wasm v0.3.2
+   Compiling cosmwasm-crypto v1.0.0-beta8
+   Compiling loupe v0.1.3
+   Compiling object v0.28.3
+   Compiling gimli v0.25.0
+   Compiling schemars v0.8.8
+   Compiling rkyv v0.7.38
+   Compiling cosmwasm-std v1.0.0-beta8
+   Compiling cosmwasm-schema v1.0.0-beta8
+   Compiling cranelift-codegen v0.76.0
+   Compiling wasmer-types v2.2.1
+   Compiling backtrace v0.3.65
+   Compiling cosmwasm-storage v1.0.0-beta8
+   Compiling wasmer-vm v2.2.1
+   Compiling cw-erc20 v0.10.0 (/home/adarsh/Desktop/yellow/contracts)
+   Compiling wasmer-compiler v2.2.1
+   Compiling wasmer-engine v2.2.1
+   Compiling wasmer-object v2.2.1
+   Compiling wasmer-compiler-singlepass v2.2.1
+   Compiling wasmer-engine-dylib v2.2.1
+   Compiling wasmer-engine-universal v2.2.1
+   Compiling cranelift-frontend v0.76.0
+   Compiling wasmer-compiler-cranelift v2.2.1
+   Compiling wasmer v2.2.1
+   Compiling wasmer-middlewares v2.2.1
+   Compiling cosmwasm-vm v1.0.0-beta8
+    Finished dev [unoptimized + debuginfo] target(s) in 1m 11s
+Created /home/adarsh/Desktop/yellow/contracts/schema/instantiate_msg.json
+Created /home/adarsh/Desktop/yellow/contracts/schema/execute_msg.json
+Created /home/adarsh/Desktop/yellow/contracts/schema/query_msg.json
+Created /home/adarsh/Desktop/yellow/contracts/schema/balance_response.json
+Created /home/adarsh/Desktop/yellow/contracts/schema/allowance_response.json
+Created /home/adarsh/Desktop/yellow/contracts/schema/constants.json
+Copying file cw_erc20.wasm from target/wasm32-unknown-unknown/release/ to artifacts/contracts
+Copying file allowance_response.json from contracts/schema to artifacts/schema/cw_erc20
+Copying file balance_response.json from contracts/schema to artifacts/schema/cw_erc20
+Copying file constants.json from contracts/schema to artifacts/schema/cw_erc20
+Copying file execute_msg.json from contracts/schema to artifacts/schema/cw_erc20
+Copying file instantiate_msg.json from contracts/schema to artifacts/schema/cw_erc20
+Copying file query_msg.json from contracts/schema to artifacts/schema/cw_erc20
 ```
 
 This command will generate compiled `.wasm` files in `artifacts/contracts/` dir and schema `.json` files in `artifacts/schema/` dir.
@@ -250,51 +347,58 @@ User scripts are a way to define the flow of interacting with contracts on some 
 A sample script `scripts/sample-script.js` is available in the boilerplate. Contents of the script is as follows:
 
 ```js
-const { Contract, getAccountByName } = require("secret-polar");
+const { Contract, getAccountByName, getLogs } = require("juno-trestle");
 
-async function run () {
+async function run() {
   const contract_owner = getAccountByName("account_0");
-  const contract = new Contract("sample-project");
+  const other = getAccountByName("account_1");
+  const contract = new Contract("cw_erc20");
+  await contract.setUpclient();
   await contract.parseSchema();
+
+  console.log("Client setup done!! ");
 
   const deploy_response = await contract.deploy(
     contract_owner,
     { // custom fees
-      amount: [{ amount: "750000", denom: "uscrt" }],
+      amount: [{ amount: "750000", denom: "ujunox" }],
       gas: "3000000",
     }
   );
   console.log(deploy_response);
 
-  const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
+  const contract_info = await contract.instantiate(
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
   console.log(contract_info);
 
-  const inc_response = await contract.tx.increment({account: contract_owner});
-  console.log(inc_response);
+  let balance_before = await contract.query.balance({ "address": contract_owner.account.address });
+  console.log(balance_before);
 
-  const response = await contract.query.get_count();
-  console.log(response);
-
-  const transferAmount = [{"denom": "uscrt", "amount": "15000000"}] // 15 SCRT
-  const customFees = { // custom fees
-    amount: [{ amount: "750000", denom: "uscrt" }],
-    gas: "3000000",
-  }
-  const ex_response = await contract.tx.increment(
-    {account: contract_owner, transferAmount: transferAmount}
+  let transfer_response = await contract.tx.transfer(
+    { account: contract_owner },
+    {
+      recipient: other.account.address,
+      amount: "50000000"
+    }
   );
-  // const ex_response = await contract.tx.increment(
-  //   {account: contract_owner, transferAmount: transferAmount, customFees: customFees}
-  // );
-  console.log(ex_response);
+  console.log(transfer_response);
+
+  let balance_after = await contract.query.balance({ "address": contract_owner.account.address });
+  console.log(balance_after);
 }
 
 module.exports = { default: run };
 ```
 
-The script above deploys, inits contract `sample-project` using account `account_0`. It then increments the count value using transaction `tx.increment()` and finally queries count using query `query.get_count()`.
+The script above deploys, inits contract `sample-project` using account `account_0` and add `100000000` amount `ERC` token to the contract_owner address. It then query balance of contract_owner account using `query.balance`. After that it transfers `50000000` token from contract_owner account to the other account address using `tx.transfer`. ANd again query the contract_owner address.
 
-For the above script to be able to run, an account with name `account_0` must be present in `polar.config.js` and contract artifacts (compiled `.wasm` and schema `.json` files) in `artifacts/` dir must be present for contract `sample-project`.
+For the above script to be able to run, an account with name `account_0` must be present in `trestle.config.js` and contract artifacts (compiled `.wasm` and schema `.json` files) in `artifacts/` dir must be present for contract `sample-project`.
 
 #### Running test scripts
 
@@ -303,16 +407,17 @@ Test scripts are used to test the contract after deploying it to the network and
 A sample test script `test/sample-test.js` is available in the boilerplate. Contents of the script is as follows:
 
 ```js
-const { expect, use } = require("chai");
-const { Contract, getAccountByName, polarChai } = require("secret-polar");
+const { use } = require("chai");
+const { Contract, getAccountByName, trestleChai } = require("juno-trestle");
 
-use(polarChai);
+use(trestleChai);
 
-describe("sample_project", () => {
+describe("erc-20", () => {
+
   async function setup() {
     const contract_owner = getAccountByName("account_1");
     const other = getAccountByName("account_0");
-    const contract = new Contract("sample-project");
+    const contract = new Contract("cw_erc20");
     await contract.parseSchema();
 
     return { contract_owner, other, contract };
@@ -321,92 +426,79 @@ describe("sample_project", () => {
   it("deploy and init", async () => {
     const { contract_owner, other, contract } = await setup();
     const deploy_response = await contract.deploy(contract_owner);
+    console.log(deploy_response);
 
-    const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
-
-    await expect(contract.query.get_count()).to.respondWith({ 'count': 102 });
-  });
-  
-  it("unauthorized reset", async () => {
-    const { contract_owner, other, contract } = await setup();
-    const deploy_response = await contract.deploy(contract_owner);
-    
-    const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
-    
-    await expect(contract.tx.reset({account: other}, 100)).to.be.revertedWith("unauthorized");
-    await expect(contract.query.get_count()).not.to.respondWith({ 'count': 1000 });
-  });
-
-  it("increment", async () => {
-    const { contract_owner, other, contract } = await setup();
-    const deploy_response = await contract.deploy(contract_owner);
-
-    const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
-
-    const ex_response = await contract.tx.increment({account: contract_owner});
-    await expect(contract.query.get_count()).to.respondWith({ 'count': 103 });
+    const contract_info = await contract.instantiate(
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
+    console.log(contract_info);
   });
 });
 ```
 
 Detailed overview of testing is given the Guides section.
 
-#### Using REPL
+<!-- #### Using REPL
 
-REPL (read–eval–print loop) gives the a console to do real time interactions with the network. Open the REPL using `polar repl --network <network-name>`. Sample REPL interaction shown below as follows:
+REPL (read–eval–print loop) gives the a console to do real time interactions with the network. Open the REPL using `trestle repl --network <network-name>`. Sample REPL interaction shown below as follows:
 
 ```bash
-$ polar repl --network testnet
-★★★  Welcome to polar REPL ★★★
+$ trestle repl --network testnet
+★★★  Welcome to Trestle REPL ★★★
 Try typing: config
 
-polar> config
+trestle> config
 {
   name: 'testnet',
   config: {
     accounts: [ [Object], [Object], [Object], [Object] ],
-    endpoint: 'http://bootstrap.supernova.enigma.co:1317',
-    chainId: 'supernova-2',
+    endpoint: 'https://rpc.uni.juno.deuslabs.fi/',
+    chainId: 'uni-2',
     trustNode: true,
     keyringBackend: 'test',
     types: {}
   }
 }
-polar> const contract_owner = polar.getAccountByName("account_0");
+trestle> const contract_owner = trestle.getAccountByName("account_0");
 Creating client for network: testnet
 undefined
-polar> const contract = new polar.Contract('sample-project');
+trestle> const contract = new trestle.Contract('sample-project');
 Creating client for network: testnet
 undefined
-polar> const deploy_response = await contract.deploy(contract_owner);
+trestle> const deploy_response = await contract.deploy(contract_owner);
 Creating compressed .wasm file for sample_project...
 ```
-
-When REPL is opened, `polar` library is already imported, use `polar.` to access classes and functions from the library. Polar Runtime Environment can be access using `env` variable and `polar.config.js` data can be accessed using `config` variable.
+<!-- 
+When REPL is opened, `trestle` library is already imported, use `trestle.` to access classes and functions from the library. Trestle Runtime Environment can be access using `env` variable and `trestle.config.js` data can be accessed using `config` variable.
 
 #### Get node information
 
-Node information can be fetched using `polar node-info --network <network-name>` as follows:
+Node information can be fetched using `trestle node-info --network <network-name>` as follows:
 
 ```bash
-$ polar node-info --network testnet
+$ trestle node-info --network testnet
 Network: testnet
-ChainId: supernova-2
+ChainId: uni-2
 Block height: 752832
 Node Info:  {
   node_info: {
     protocol_version: { p2p: '8', block: '11', app: '0' },
     id: 'ab6394e953e0b570bb1deeb5a8b387aa0dc6188a',
     listen_addr: 'tcp://0.0.0.0:26656',
-    network: 'supernova-2',
+    network: 'uni-2',
     version: '0.34.12',
     channels: '40202122233038606100',
     moniker: 'sg-testnet-0',
     other: { tx_index: 'on', rpc_address: 'tcp://0.0.0.0:26657' }
   },
   application_version: {
-    name: 'SecretNetwork',
-    server_name: 'secretd',
+    name: 'JunoNetwork',
+    server_name: 'junod',
     version: '1.2.0-beta1-79-g660cb1d9',
     commit: '',
     build_tags: 'netgo ledger hw production',
@@ -423,8 +515,8 @@ Node Info:  {
     cosmos_sdk_version: 'v0.44.1'
   }
 }
-```
+``` -->
 
 #### Cleanup artifacts
 
-To clear artifacts data, use `polar clean` and to clean artifacts for only one contract, use `polar clean <contract-name>`.
+To clear artifacts data, use `trestle clean` and to clean artifacts for only one contract, use `trestle clean <contract-name>`.
