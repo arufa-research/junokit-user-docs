@@ -2,66 +2,42 @@
 
 #### Setup the Local Developer Testnet
 
-In this document you'll find information on setting up a local Secret Network.
+In this document you'll find information on setting up a local Juno Network.
 
 #### Running the docker container
 
 The developer blockchain is configured to run inside a docker container. Install Docker for your environment .
-Open a terminal window and change to your project directory. Then start SecretNetwork, labelled secretdev from here on:
-
+Open a terminal window and change to your project directory. Then start JunoNetwork from here on(Keep juno version updated wth juno repo. It is currently 5.0.0):
 ```bash
-CHANGE IT //////////////
-docker run -it --rm \
- -p 26657:26657 -p 26656:26656 -p 1337:1337 \
- --name secretdev enigmampc/secret-network-sw-dev
+docker run -it \
+  --name juno_node_1 \
+  -p 26656:26656 \
+  -p 26657:26657 \
+  -e STAKE_TOKEN=ujunox \
+  -e UNSAFE_CORS=true \
+  ghcr.io/cosmoscontracts/juno:v5.0.0 \
+  ./setup_and_run.sh juno16g2rahf5846rxzp3fwlswy08fz8ccuwk03k57y 
 ```
-A few accounts are available with the following information that can be used for the development and testing purpose on the localnet.
-
-```js
-{
-  "name": "a",
-  "type": "local",
-  "address": "juno12alhz3va0sz9zj7wwtfvxnrpsqhj6lw2dge0zc",
-  "pubkey": "junopub1addwnpepq2qckftgul7ex8nauluqrdc9y2080wxr0xsve7cmx3lhe777ne59wzg9053",
-  "mnemonic": "tide universe inject switch average weather obvious cube wrist shaft record chat dentist wink collect hungry cycle draw ribbon course royal indoor remind address"
-}
+Copy mnemonics from terminal to the trestle.config.js file- 
+```bash
+`mnemonic : camera battle reward view obtain obvious stadium display harbor original link trigger venture tip exhibit ladder ride captain breeze replace brand tape narrow recycle`
 ```
+There is a prebuilt docker image for you to use. This will start a container with a seeded user. The address and mnemonic used here can be found in the docker/ directory of the juno network repo. When you're done, you can use ctrl+c to stop the container running.
 
-we need to copy the name, address and mnemonic info of the accounts that we get on running the docker in our trestle config file. Also it should be noted that the accounts that are to be interacted with must be on the same network. In this case the account must be present on the localnet.
 
-The secretdev docker container can be stopped by CTRL+C. At this point you're running a local SecretNetwork full-node. 
+we need to copy the name, address and mnemonic info of the account that we get on running the docker in our trestle.config.js file. Also it should be noted that the accounts that are to be interacted with must be on the same network. In this case the account must be present on the localnet.
+
+The docker container can be stopped by CTRL+C. At this point you're running a local JunoNetwork full-node. 
 
 #### Checking the node info
 
-We can then check the node info and status of the node. Open a new terminal :
+We can then check the node info of the node. Open a new terminal :
 
 ```bash
 trestle node-info
-Creating client for network: default
 Network: default
 ChainId: uni-2
-Block height: 1340928
-Node Info:  {
-  node_info: {
-    protocol_version: { p2p: '7', block: '10', app: '0' },
-    id: '115aa0a629f5d70dd1d464bc7e42799e00f4edae',
-    listen_addr: 'tcp://0.0.0.0:26656',
-    network: default,
-    version: '0.33.8',
-    channels: '4020212223303800',
-    moniker: 'banana',
-    other: { tx_index: 'on', rpc_address: 'tcp://0.0.0.0:26657' }
-  },
-  application_version: {
-    name: 'JunoNetwork',
-    server_name: 'junod',
-    client_name: 'junocli',
-    version: '1.0.4-debug-print-45-g038cd80b',
-    commit: '',
-    build_tags: 'netgo ledger sw',
-    go: 'go version go1.15.5 linux/amd64'
-  }
-}
+Block height: 1358994
 ```
 
 #### Compile the contract

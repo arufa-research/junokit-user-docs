@@ -280,7 +280,7 @@ $ trestle repl --network testnet
 ★★★  Welcome to trestle REPL ★★★
 Try typing: config
 
-polar> config
+trestle> config
 {
   name: 'default',
   config: {
@@ -302,69 +302,39 @@ Node information can be fetched using `trestle node-info --network <network-name
 ```bash
 $ trestle node-info --network testnet
 Network: testnet
-ChainId: supernova-2
-Block height: 752832
-Node Info:  {
-  node_info: {
-    protocol_version: { p2p: '8', block: '11', app: '0' },
-    id: 'ab6394e953e0b570bb1deeb5a8b387aa0dc6188a',
-    listen_addr: 'tcp://0.0.0.0:26656',
-    network: 'supernova-2',
-    version: '0.34.12',
-    channels: '40202122233038606100',
-    moniker: 'sg-testnet-0',
-    other: { tx_index: 'on', rpc_address: 'tcp://0.0.0.0:26657' }
-  },
-  application_version: {
-    name: 'SecretNetwork',
-    server_name: 'secretd',
-    version: '1.2.0-beta1-79-g660cb1d9',
-    commit: '',
-    build_tags: 'netgo ledger hw production',
-    go: 'go version go1.15.5 linux/amd64',
-    build_deps: [
-      'filippo.io/edwards25519@v1.0.0-beta.2',
-      'github.com/99designs/keyring@v1.1.6',
-      ...
-      'gopkg.in/ini.v1@v1.62.0',
-      'gopkg.in/yaml.v2@v2.4.0',
-      'gopkg.in/yaml.v3@v3.0.0-20210107192922-496545a6307b',
-      'nhooyr.io/websocket@v1.8.6'
-    ],
-    cosmos_sdk_version: 'v0.44.1'
-  }
-}
+ChainId: uni-2
+Block height: 1358994
 ```
 
 #### Cleanup artifacts
 
-To clear artifacts data, use `polar clean` and to clean artifacts for only one contract, use `polar clean <contract-name>`.
+To clear artifacts data, use `trestle clean` and to clean artifacts for only one contract, use `trestle clean <contract-name>`.
 
 ## Guides
 
 ### Setting up a project
 
-Project setup can be broken down to 3 steps broadly, which are boiler plate generation, updating project name and updating `polar.config.js` file.
+Project setup can be broken down to 3 steps broadly, which are boiler plate generation, updating project name and updating `trestle.config.js` file.
 
 #### Boilerplate code
 
-Use command `polar init <project-name>` to generate boilerplate code. Use command `polar init <project-name> <template-name>` to generate boilerplate code using a particular template (template names can be found from repository `https://github.com/arufa-research/polar-templates`).
+Use command `trestle init <project-name>` to generate boilerplate code. Use command `trestle init <project-name> <template-name>` to generate boilerplate code using a particular template (template names can be found from repository `https://github.com/arufa-research/trestle-templates`).
 
 ```bash
-$ polar init yellow
-★ Welcome to polar v0.9.0
-Initializing new project in /home/uditgulati/yellow.
+$ trestle init yellow
+★ Welcome to trestle v0.1.1
+Initializing new project in /home/adarsh/Desktop/yellow.
 
 ★ Project created ★
 
 You need to install these dependencies to run the sample project:
-  npm install --save-dev chai
+  npm install --global --save-dev chai
 
-Success! Created project at /home/uditgulati/yellow.
+Success! Created project at /home/adarsh/Desktop/yellow.
 Begin by typing:
   cd yellow
-  npx polar help
-  npx polar compile
+  trestle help
+  trestle compile
 ```
 
 The generated directory will have the following initial structure:
@@ -376,33 +346,23 @@ The generated directory will have the following initial structure:
 │   ├── Cargo.toml
 │   ├── examples
 │   │   └── schema.rs
-│   ├── src
-│   │   ├── contract.rs
-│   │   ├── lib.rs
-│   │   ├── msg.rs
-│   │   └── state.rs
-│   └── tests
-│       └── integration.rs
+│   └── src
+│       ├── contract.rs
+│       ├── error.rs
+│       ├── lib.rs
+│       ├── msg.rs
+│       └── state.rs
 ├── package.json
-├── packages
-│   └── cargo_common
-│       ├── Cargo.lock
-│       ├── Cargo.toml
-│       └── src
-│           ├── balances.rs
-│           ├── cashmap.rs
-│           ├── contract.rs
-│           ├── lib.rs
-│           ├── tokens.rs
-│           └── voting.rs
-├── polar.config.js
+├── Cargo.toml
+├── Cargo.lock
+├── Trestle.config.js
 ├── README.md
 ├── scripts
 │   └── sample-script.js
 └── test
     └── sample-test.js
 
-9 directories, 22 files
+5 directories, 15 files
 ```
 
 The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory can contain `.js` and `.ts` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory can contain `.js` and `.ts` scripts to run tests for the deployed contracts.
@@ -416,13 +376,13 @@ $ grep -r "sample-project"
 package.json:  "name": "sample-project",
 contracts/Cargo.lock:name = "sample-project"
 contracts/Cargo.toml:name = "sample-project"
-scripts/sample-script.js:  const contract = new Contract('sample-project', runtimeEnv);
+scripts/sample-script.js:  const contract = new Contract('sample-project');
 ```
 
 ```bash
 $ grep -r "sample_project"
-contracts/examples/schema.rs:use sample_project::msg::{CountResponse, HandleMsg, InitMsg, QueryMsg};
-contracts/examples/schema.rs:use sample_project::state::State;
+contracts/examples/schema.rs:use sample_project::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, BalanceResponse, AllowanceResponse};
+contracts/examples/schema.rs:use sample_project::state::Constants;
 ```
 
 Replacing them with a project name suppose `yellow` should look like following:
@@ -432,31 +392,31 @@ $ grep -r "yellow"
 package.json:  "name": "yellow",
 contracts/Cargo.lock:name = "yellow"
 contracts/Cargo.toml:name = "yellow"
-contracts/examples/schema.rs:use yellow::msg::{CountResponse, HandleMsg, InitMsg, QueryMsg};
-contracts/examples/schema.rs:use yellow::state::State;
+contracts/examples/schema.rs:use yellow::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, BalanceResponse, AllowanceResponse};
+contracts/examples/schema.rs:use yellow::state::Constants;
 scripts/sample-script.js:  const contract = new Contract('yellow', runtimeEnv);
 ```
 
-Now compiling using `polar compile` would create following structure in `artifacts/` dir:
+Now compiling using `trestle compile` would create following structure in `artifacts/` dir:
 
 ```bash
 artifacts/
 ├── contracts
 │   └── yellow.wasm
 └── schema
-    └── yellow
-        ├── count_response.json
-        ├── handle_msg.json
-        ├── init_msg.json
-        ├── query_msg.json
-        └── state.json
+    └── allowance_response.json
+    └── balance_response.json
+    └── constants.json
+    └── execute_msg.json
+    └── instantiate_msg.json
+    └── query_msg.json
 
-3 directories, 6 files
+2 directories, 7 files
 ```
 
-#### Polar config
+#### trestle config
 
-Polar uses config file `polar.config.js` to execute tasks for the given project. Initial contents of `polar.config.js` file are explained below:
+trestle uses config file `trestle.config.js` to execute tasks for the given project. Initial contents of `trestle.config.js` file are explained below:
 
 **Network config**. Has following parameters:
 
@@ -469,25 +429,25 @@ Polar uses config file `polar.config.js` to execute tasks for the given project.
 
 ```js
 networks: {
-  // Supernova Testnet
-    testnet: {
-      endpoint: 'http://bootstrap.supernova.enigma.co:1317',
-      chainId: 'supernova-2',
-      trustNode: true,
-      keyringBackend: 'test',
-      accounts: accounts,
-      types: {},
-      fees: {
-        upload: {
-            amount: [{ amount: "500000", denom: "uscrt" }],
-            gas: "2000000",
-        },
-        init: {
-            amount: [{ amount: "125000", denom: "uscrt" }],
-            gas: "500000",
-        },
-      }
+  // uni-2
+  testnet: {
+    endpoint: 'https://rpc.uni.juno.deuslabs.fi/',//https://lcd.uni.juno.deuslabs.fi/
+    chainId: 'uni-2',
+    trustNode: true,
+    keyringBackend: 'test',
+    accounts: accounts,
+    types: {},
+    fees: {
+      upload: {
+          amount: [{ amount: "500000", denom: "ujunox" }],
+          gas: "2000000",
+      },
+      init: {
+          amount: [{ amount: "125000", denom: "ujunox" }],
+          gas: "500000",
+      },
     }
+  }
 }
 ```
 
@@ -501,13 +461,13 @@ networks: {
 const accounts = [
   {
     name: 'account_0',
-    address: 'secret1l0g5czqw7vjvd20ezlk4x7ndgyn0rx5aumr8gk',
-    mnemonic: 'snack cable erode art lift better october drill hospital clown erase address'
+    address: 'juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5',
+    mnemonic: 'omit sphere nurse rib tribe suffer web account catch brain hybrid zero act gold coral shell voyage matter nose stick crucial fog judge text'
   },
   {
     name: 'account_1',
-    address: 'secret1ddfphwwzqtkp8uhcsc53xdu24y9gks2kug45zv',
-    mnemonic: 'sorry object nation also century glove small tired parrot avocado pulp purchase'
+    address: 'juno1njamu5g4n0vahggrxn4ma2s4vws5x4w3u64z8h',
+    mnemonic: 'student prison fresh dwarf ecology birth govern river tissue wreck hope autumn basic trust divert dismiss buzz play pistol focus long armed flag bicycle'
   }
 ];
 ```
@@ -519,39 +479,36 @@ mocha: {
   timeout: 60000
 }
 ```
-
-
 ### Compiling your contracts
 
-Compiling contracts can be done using the command `polar compile`.
+Compiling contracts can be done using the command `trestle compile`.
 
 #### Compile all contracts
 
-`polar compile` by default compiles all the contracts in the `contracts/` directory. For each contract compiled, corresponding `.wasm` file is stored in the `artifacts/contracts` directory created in project's root directory.
+`trestle compile` by default compiles all the contracts in the `contracts/` directory. For each contract compiled, corresponding `.wasm` file is stored in the `artifacts/contracts` directory created in project's root directory.
 
 #### Compile one contract
 
-To compile only one contract or a subset of all contracts in the `contract/` directory, use command `polar compile <sourcePaths>` and this can look something like `polar compile contracts/sample-project` or `polar compile contracts/sample-project-1 contracts/sample-project-2`.
+To compile only one contract or a subset of all contracts in the `contract/` directory, use command `trestle compile <sourcePaths>` and this can look something like `trestle compile contracts/sample-project` or `trestle compile contracts/sample-project-1 contracts/sample-project-2`.
 
 #### Schema generation
 
-Schema is also generated alongside the compiled `.wasm` file for each of the contract compiled using `polar compile` command. Schema files are `.json` files (stored inside `artifacts/schema/`) directory and there are multiple `.json` files per contract but only one `.wasm` compiled file per contract.
+Schema is also generated alongside the compiled `.wasm` file for each of the contract compiled using `trestle compile` command. Schema files are `.json` files (stored inside `artifacts/schema/`) directory and there are multiple `.json` files per contract but only one `.wasm` compiled file per contract. To skip schema generation while compiling use `trestle compile --skip-schema`.
 
 Single contract `artifacts/` directory structure:
 
 ```bash
-.
+artifacts/
 ├── contracts
-│   └── sample_project.wasm
+│   └── yellow.wasm
 └── schema
-    └── sample_project
-        ├── count_response.json
-        ├── handle_msg.json
-        ├── init_msg.json
-        ├── query_msg.json
-        └── state.json
-
-3 directories, 6 files
+    └── allowance_response.json
+    └── balance_response.json
+    └── constants.json
+    └── execute_msg.json
+    └── instantiate_msg.json
+    └── query_msg.json
+2 directories, 7 files
 ```
 
 Multi contract `artifacts/` directory structure:
@@ -562,47 +519,74 @@ Multi contract `artifacts/` directory structure:
 |   ├── sample_project_1.wasm
 │   └── sample_project_2.wasm
 └── schema
-    ├── sample_project
-    │   ├── count_response.json
-    │   ├── handle_msg.json
-    │   ├── init_msg.json
-    │   ├── query_msg.json
-    │   └── state.json
-    └── sample_project_1
-        ├── count_response.json
-        ├── handle_msg.json
-        ├── init_msg.json
-        ├── query_msg.json
-        └── state.json
+    ├── sample_project_1
+    │   ├── allowance_response.json
+    │   ├── balance_response.json
+    │   ├── constants.json
+    │   ├── execute_msg.json
+    │   └── instantiate_msg.json
+    │   └── query_msg.json
+    └── sample_project_2
+        ├── allowance_response.json
+    │   ├── balance_response.json
+    │   ├── constants.json
+    │   ├── execute_msg.json
+    │   └── instantiate_msg.json
+    │   └── query_msg.json
 
-4 directories, 12 files
+4 directories, 14 files
 ```
-
 ### Writing scripts
 
 #### Sample script walkthrough
 
-Polar boilerplate code has sample script `scripts/sample-script.js` with following content: 
+Trestle boilerplate code has sample script `scripts/sample-script.js` with following content: 
 
 ```js
-const { Contract, getAccountByName } = require("secret-polar");
+const { Contract, getAccountByName, getLogs } = require("juno-trestle");
 
-async function run () {
+async function run() {
   const contract_owner = getAccountByName("account_0");
-  const contract = new Contract('sample-project');
+  const other = getAccountByName("account_1");
+  const contract = new Contract("cw_erc20");
+  await contract.setUpclient();
   await contract.parseSchema();
 
-  const deploy_response = await contract.deploy(contract_owner);
+  console.log("Client setup done!! ");
+
+  const deploy_response = await contract.deploy(
+    contract_owner,
+    { // custom fees
+      amount: [{ amount: "750000", denom: "ujunox" }],
+      gas: "3000000",
+    }
+  );
   console.log(deploy_response);
 
-  const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
+  const contract_info = await contract.instantiate(
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
   console.log(contract_info);
 
-  const ex_response = await contract.tx.increment(contract_owner, []);
-  console.log(ex_response);
+  let balance_before = await contract.query.balance({ "address": contract_owner.account.address });
+  console.log(balance_before);
 
-  const response = await contract.query.get_count();
-  console.log(response);
+  let transfer_response = await contract.tx.transfer(
+    { account: contract_owner },
+    {
+      recipient: other.account.address,
+      amount: "50000000"
+    }
+  );
+  console.log(transfer_response);
+
+  let balance_after = await contract.query.balance({ "address": contract_owner.account.address });
+  console.log(balance_after);
 }
 
 module.exports = { default: run };
@@ -610,13 +594,13 @@ module.exports = { default: run };
 
 Following is a line-by-line breakdown of the above script:
 
-+ Import `Contract` class and `getAccountByName` method from `secret-polar` library.
++ Import `Contract` class and `getAccountByName` method from `juno-trestle` library.
 
 ```js
-const { Contract, getAccountByName } = require("secret-polar");
+const { Contract, getAccountByName } = require("juno-trestle");
 ```
 
-+ `run` function definition. It should have the same signature as below with no argument. This `run` function is called by polar.
++ `run` function definition. It should have the same signature as below with no argument. This `run` function is called by trestle.
 
 ```js
 async function run () {
@@ -634,49 +618,60 @@ async function run () {
   const contract = new Contract('sample-project');
 ```
 
-+ Load schema files for contract `sample-json`. Will generate error if schema files are not present, so make sure to run `polar compile` before running this.
++ Load schema files for contract `sample-json`. Will generate error if schema files are not present, so make sure to run `trestle compile` before running this.
 
 ```js
   await contract.parseSchema();
 ```
 
-+ Deploy the contract. Network is specified in the `polar run scripts/<script-name> --network <network-name>` command.
++ Deploy the contract. Network is specified in the `trestle run scripts/<script-name> --network <network-name>` command.
 
 ```js
   const deploy_response = await contract.deploy(contract_owner);
+``` 
++ Instantiate contract instance with name `{"name": "ERC"}`, symbol `{"symbol": "ER"}`, decimals `{"decimals": 10}` and initial_balances `{"initial_balances": [{"address": contract_owner.account.address, "amount": "100000000"}]}` .
+```js
+  const contract_info = await contract.instantiate(
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
 ```
 
-+ Instantiate contract instance with values `{"count": 102}` and label `"deploy test"` and account `contract_owner`.
++ Execute `transfer()` transaction using account `contract_owner`. For each contract execute method, calling signature is `contract.tx.<method_name>({account: <signing_account>, transferAmount: <tokens_to_send_with_txn>, customFees: <custom_fees_struct>}, ...<method_args>);`.
 
 ```js
-  const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
+  let transfer_response = await contract.tx.transfer(
+    { account: contract_owner },
+    {
+      recipient: other.account.address,
+      amount: "50000000"
+    }
+  );
 ```
 
-+ Execute `increment()` transaction using account `contract_owner`. For each contract execute method, calling signature is `contract.tx.<method_name>(<signing_account>, <tokens_to_send_with_txn>, ...<method_args>);`.
++ Fetch count value using query `balance`.
 
 ```js
-  const ex_response = await contract.tx.increment(contract_owner, []);
+  let balance = await contract.query.balance({ "address": contract_owner.account.address });;
 ```
 
-+ Fetch count value using query `get_count()`.
-
-```js
-  const response = await contract.query.get_count();
-```
-
-+ Export `run` function as default for the script. Default function is called by polar runner.
++ Export `run` function as default for the script. Default function is called by trestle runner.
 
 ```js
 module.exports = { default: run };
 ```
 
-#### Polar Runtime Environment
+#### trestle Runtime Environment
 
-Polar runtime environment is used internally by polar. It is created when a polar task is executed using bash command `polar ...`. It can be accessed in REPL using variable `env`. It has following parameters:
+trestle runtime environment is used internally by trestle. It is created when a trestle task is executed using bash command `trestle ...`. It can be accessed in REPL using variable `env`. It has following parameters:
 
 + **config**: Has paths of config file, contract sources, artifacts, project root and test path. Other config values such as networks config and mocha timeout.
 
-+ **runtimeArgs**: Runtime metadata such as network to use etc. Network can be specified in a polar command like `polar ... --network <network-name>`.
++ **runtimeArgs**: Runtime metadata such as network to use etc. Network can be specified in a trestle command like `trestle ... --network <network-name>`.
 
 + **tasks**: List of available tasks with details.
 
@@ -725,7 +720,14 @@ Gives following response:
 Instantiate the contract.
 
 ```js
-const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
+const contract_info = await contract.instantiate(
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
 ```
 
 Gives following response:
@@ -742,8 +744,8 @@ Gives following response:
 To list contract's execute methods, print `contract.tx`.
 
 ```js
-polar> contract.tx
-{ increment: [Function (anonymous)], reset: [Function (anonymous)] }
+trestle> contract.tx
+{ Approve: [Function (anonymous)], Transfer: [Function (anonymous), TransferFrom: [Function (anonymous), Burn: [Function (anonymous)] }
 ```
 
 **query methods**
@@ -751,25 +753,25 @@ polar> contract.tx
 To list contract's query methods, print `contract.query`.
 
 ```js
-polar> contract.query
-{ get_count: [Function (anonymous)] }
+trestle> contract.query
+{ Balance: [Function (anonymous), Allowance: [Function (anonymous)] }
 ```
 
 #### getAccountByName
 
-In the sample `polar.config.js` file, the accounts are defined as below:
+In the sample `trestle.config.js` file, the accounts are defined as below:
 
 ```js
 const accounts = [
   {
     name: 'account_0',
-    address: 'secret1l0g5czqw7vjvd20ezlk4x7ndgyn0rx5aumr8gk',
-    mnemonic: 'snack cable erode art lift better october drill hospital clown erase address'
+    address: 'juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5',
+    mnemonic: 'omit sphere nurse rib tribe suffer web account catch brain hybrid zero act gold coral shell voyage matter nose stick crucial fog judge text'
   },
   {
     name: 'account_1',
-    address: 'secret1ddfphwwzqtkp8uhcsc53xdu24y9gks2kug45zv',
-    mnemonic: 'sorry object nation also century glove small tired parrot avocado pulp purchase'
+    address: 'juno1njamu5g4n0vahggrxn4ma2s4vws5x4w3u64z8h',
+    mnemonic: 'student prison fresh dwarf ecology birth govern river tissue wreck hope autumn basic trust divert dismiss buzz play pistol focus long armed flag bicycle'
   }
 ];
 ```
@@ -777,22 +779,22 @@ const accounts = [
 These accounts can be easily accessed inside the scripts or in repl using the method, `getAccountByName(<account_name>)`, for example:
 
 ```js
-const { getAccountByName } = require("secret-polar");
+const { getAccountByName } = require("juno-trestle");
 
 const account_0 = getAccountByName("account_0");
 const account_1 = getAccountByName("account_1");
 
 console.log(account_0.name);  // account_0
-console.log(account_0.address); // secret1l0g5czqw7vjvd20ezlk4x7ndgyn0rx5aumr8gk
-console.log(account_0.mnemonic); // snack cable erode art lift better october drill hospital clown erase address
+console.log(account_0.address); // juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5
+console.log(account_0.mnemonic); // omit sphere nurse rib tribe suffer web account catch brain hybrid zero act gold coral shell voyage matter nose stick crucial fog judge text
 ```
 
 #### createAccounts
 
-This method is used to generate new accounts and then can be filled with some balance using a testnet faucet `https://faucet.supernova.enigma.co/` (faucet are only for testnets). 
+This method is used to generate new accounts and then can be filled with some balance using a testnet faucet `https://stakely.io/en/faucet/juno` (faucet are only for testnets). 
 
 ```js
-const { createAccounts } = require("secret-polar");
+const { createAccounts } = require("juno-trestle");
 
 const res = await createAccounts(1); // array of one account object
 const res = await createAccounts(3);  // array of three account objects
@@ -802,11 +804,14 @@ const res = await createAccounts(3);  // array of three account objects
 
 Checkpoints store the metadata of contract instance on the network. It stores the deploy metadata (codeId, contractCodeHash, deployTimestamp) and instantiate metadata (contractAddress, instantiateTimestamp). This comes handy when a script is run which deploys, inits and does some interactions with the contracts. 
 
-Suppose the script fails after init step and now script is to be rerun after some fixes in the contract, here one does not want for the contract to be deployed and instantiated again, so polar picks up the saved metadata from checkpoints file and directly skips to part after init and uses the previously deployed instance and user does not have to pay the extra gas and wait extra time to deploy, init the contract again. Same happens when there is error before init and rerun skips deploy and directly executes init step.
+Suppose the script fails after init step and now script is to be rerun after some fixes in the contract, here one does not want for the contract to be deployed and instantiated again, so trestle picks up the saved metadata from checkpoints file and directly skips to part after init and uses the previously deployed instance and user does not have to pay the extra gas and wait extra time to deploy, init the contract again. Same happens when there is error before init and rerun skips deploy and directly executes init step.
+
+To skip using checkpoints when running script, use `trestle run <script-path> --skip-checkpoints`.
+
 
 ### Testing contracts
 
-Contracts can be tested in two ways, one by writing rust tests in the `contract.rs` file itself, and other way is to write a mocha test script that interacts with deployed contract and assert the returned values. There are examples for both in the `sample-project` created after `polar init` step.
+Contracts can be tested in two ways, one by writing rust tests in the `contract.rs` file itself, and other way is to write a mocha test script that interacts with deployed contract and assert the returned values. There are examples for both in the `sample-project` created after `trestle init` step.
 
 #### Rust tests
 
@@ -814,73 +819,91 @@ These tests can be run by going into the contract's directory having `Cargo.toml
 
 #### Client interaction tests
 
-These tests can be run by running the command `polar run test --network <network-name>`.
+These tests can be run by running the command `trestle test --network <network-name>`.
 
 #### Test scripts
 
-Polar has support for user to write tests on top of js interactions with the deployed contract instance. These scripts are stored in the `test/` directory in the project's root directory.
+trestle has support for user to write tests on top of js interactions with the deployed contract instance. These scripts are stored in the `test/` directory in the project's root directory.
 
-A polar test script has the same structure as a mocha test file with `describe` and `it` blocks, a sample test is explained below:
+A trestle test script has the same structure as a mocha test file with `describe` and `it` blocks, a sample test is explained below:
 
 ```js
-const { expect, use } = require("chai");
-const { Contract, getAccountByName, polarChai } = require("secret-polar");
+const { use } = require("chai");
+const { Contract, getAccountByName, trestleChai } = require("juno-trestle");
 
-use(polarChai);
+use(trestleChai);
 
-describe("sample_project", () => {
+describe("erc-20", () => {
+
   async function setup() {
     const contract_owner = getAccountByName("account_1");
     const other = getAccountByName("account_0");
-    const contract = new Contract("sample-project");
+    const contract = new Contract("cw_erc20");
     await contract.parseSchema();
+    const deploy_response = await contract.deploy(
+    contract_owner,
+    { // custom fees
+      amount: [{ amount: "750000", denom: "ujunox" }],
+      gas: "3000000",
+    }
+  );
+  console.log(deploy_response)
 
     return { contract_owner, other, contract };
   }
 
   it("deploy and init", async () => {
-    const { contract_owner, other, contract } = await setup();
-    const deploy_response = await contract.deploy(contract_owner);
-
-    const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
-
-    await expect(contract.query.get_count()).to.respondWith({ 'count': 102 });
+    const contract_info = await contract.instantiate(
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
+  console.log(contract_info);
   });
 
-  it("unauthorized reset", async () => {
+  it("transfer and query balance", async () => {
     const { contract_owner, other, contract } = await setup();
     const deploy_response = await contract.deploy(contract_owner);
+    console.log(deploy_response);
 
-    const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
-
-    await expect(contract.tx.reset(other, [], 100)).to.be.revertedWith("unauthorized");
-    await expect(contract.query.get_count()).not.to.respondWith({ 'count': 1000 });
-  });
-
-  it("increment", async () => {
-    const { contract_owner, other, contract } = await setup();
-    const deploy_response = await contract.deploy(contract_owner);
-
-    const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
-
-    const ex_response = await contract.tx.increment(contract_owner, []);
-    await expect(contract.query.get_count()).to.respondWith({ 'count': 103 });
+    const contract_info = await contract.instantiate(
+    {
+      "name": "ERC", "symbol": "ER", "decimals": 10,
+      "initial_balances": [{
+        "address": contract_owner.account.address,
+        "amount": "100000000"
+      }]
+    }, "deploy test", contract_owner);
+  console.log(contract_info);
+    let transfer_response = await contract.tx.transfer(
+    { account: contract_owner },
+    {
+      recipient: other.account.address,
+      amount: "50000000"
+    }
+  );
+  console.log(transfer_response);
+  let balance_after = await ;
+  await expect(contract.query.balance({ "address": contract_owner.account.address })).to.respondWith({"balance": "50000000"});
   });
 });
 ```
 
 Following is a breakdown of the above script:
 
-+ Import `expect` and `use` from chai, `Contract`, `getAccountByName` and `polarChai` from secret-polar and add polar asserts to chai using `use(polarChai)`.
++ Import `expect` and `use` from chai, `Contract`, `getAccountByName` and `trestleChai` from juno-trestle and add trestle asserts to chai using `use(trestleChai)`.
 
 ```js
 const { expect, use } = require("chai");
-const { Contract, getAccountByName, polarChai } = require("secret-polar");
+const { Contract, getAccountByName, trestleChai } = require("juno-trestle");
 
-use(polarChai);
+use(trestleChai);
 ```
 
-+ `setup()` method does the initial common steps for each test, such as creating `Account` objects, creating `Contract` objects and parsing contract's schema files.
++ `setup()` method does the initial common steps for each test, such as creating `Account` objects, creating `Contract` objects, parsing contract's schema files and deploying the contract.
 
 ```js
   async function setup() {
@@ -888,53 +911,43 @@ use(polarChai);
     const other = getAccountByName("account_0");
     const contract = new Contract("sample-project");
     await contract.parseSchema();
-
+  const deploy_response = await contract.deploy(
+    contract_owner,
+    { // custom fees
+      amount: [{ amount: "750000", denom: "ujunox" }],
+      gas: "3000000",
+    }
+  );
+  console.log(deploy_response)
     return { contract_owner, other, contract };
   }
 ```
 
-+ First test: Deploys, inits the contract and tests query count value.
++ First test: Deploys and inits the contract . Trestle automatically creates dynamic label for test deploys, which means that below label "deploy test" is not used instead "deploy <contract_name> <curr_ts>" is used which is always unique, so you don't have to manually change label for each test run.
+
+**Note:** It is fine to have `deploy`, `instantiate` in each test as they are not executed multiple times for a given contract. Moving these steps in the `setup()` method is fine.
+
+#### Chai matchers
+
+A set of chai matchers, makes your test easy to write and read. Before you can start using the matchers, you have to tell chai to use the trestleChai plugin:
 
 ```js
-  it("deploy and init", async () => {
-    const { contract_owner, other, contract } = await setup();
-    const deploy_response = await contract.deploy(contract_owner);
+const { expect, use } = require("chai");
+const { Contract, getAccountByName, trestleChai } = require("juno-trestle");
 
-    const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
-
-    await expect(contract.query.get_count()).to.respondWith({ 'count': 102 });
-  });
+use(trestleChai);
 ```
 
-+ Second test: Deploys, inits the contract and tests query unauthorized execution of `reset()` transaction.
+Below is the list of available matchers:
+
++ **Execution Response**
+
+Testing what response was received after transaction execution:
 
 ```js
-  it("unauthorized reset", async () => {
-    const { contract_owner, other, contract } = await setup();
-    const deploy_response = await contract.deploy(contract_owner);
-    
-    const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
-    
-    await expect(contract.tx.reset(other, [], 100)).to.be.revertedWith("unauthorized");
-    await expect(contract.query.get_count()).not.to.respondWith({ 'count': 1000 });
-  });
+await expect(contract.query.balance({ "address": contract_owner.account.address })).to.respondWith({"balance": "50000000"});
+
 ```
-
-+ Third test: Deploys, inits the contract and tests `increment` transaction.
-
-```js
-  it("increment", async () => {
-    const { contract_owner, other, contract } = await setup();
-    const deploy_response = await contract.deploy(contract_owner);
-
-    const contract_info = await contract.instantiate({"count": 102}, "deploy test", contract_owner);
-
-    const ex_response = await contract.tx.increment(contract_owner, []);
-    await expect(contract.query.get_count()).to.respondWith({ 'count': 103 });
-  });
-```
-
-**Note:** It is fine to have `deploy`, `instantiate` in each test as they are not executed multiple times for a given contract. Moving these steps in the `setup()` method is fine too.
 
 <!--
 
@@ -947,69 +960,46 @@ use(polarChai);
 ## API -->
 
 
-### Using localnet with polar
+### Using localnet with trestle
 
 #### Setup the Local Developer Testnet
 
-In this document you'll find information on setting up a local Secret Network.
+In this document you'll find information on setting up a local Juno Network.
 
 #### Running the docker container
 
 The developer blockchain is configured to run inside a docker container. Install Docker for your environment .
-Open a terminal window and change to your project directory. Then start SecretNetwork, labelled secretdev from here on:
-
+Open a terminal window and change to your project directory. Then start JunoNetwork from here on(Keep juno version updated wth juno repo. It is currently 5.0.0):
 ```bash
-docker run -it --rm \
- -p 26657:26657 -p 26656:26656 -p 1337:1337 \
- --name secretdev enigmampc/secret-network-sw-dev
+docker run -it \
+  --name juno_node_1 \
+  -p 26656:26656 \
+  -p 26657:26657 \
+  -e STAKE_TOKEN=ujunox \
+  -e UNSAFE_CORS=true \
+  ghcr.io/cosmoscontracts/juno:v5.0.0 \
+  ./setup_and_run.sh juno16g2rahf5846rxzp3fwlswy08fz8ccuwk03k57y 
 ```
-A few accounts are available with the following information that can be used for the development and testing purpose on the localnet.
-
-```js
-{
-  "name": "a",
-  "type": "local",
-  "address": "secret12alhz3va0sz9zj7wwtfvxnrpsqhj6lw2dge0zc",
-  "pubkey": "secretpub1addwnpepq2qckftgul7ex8nauluqrdc9y2080wxr0xsve7cmx3lhe777ne59wzg9053",
-  "mnemonic": "tide universe inject switch average weather obvious cube wrist shaft record chat dentist wink collect hungry cycle draw ribbon course royal indoor remind address"
-}
+Copy mnemonics from terminal to the trestle.config.js file- 
+```bash
+`mnemonic : camera battle reward view obtain obvious stadium display harbor original link trigger venture tip exhibit ladder ride captain breeze replace brand tape narrow recycle`
 ```
+There is a prebuilt docker image for you to use. This will start a container with a seeded user. The address and mnemonic used here can be found in the docker/ directory of the juno network repo. When you're done, you can use ctrl+c to stop the container running.
 
-we need to copy the name, address and mnemonic info of the accounts that we get on running the docker in our polar config file. Also it should be noted that the accounts that are to be interacted with must be on the same network. In this case the account must be present on the localnet.
 
-The secretdev docker container can be stopped by CTRL+C. At this point you're running a local SecretNetwork full-node. 
+we need to copy the name, address and mnemonic info of the account that we get on running the docker in our trestle.config.js file. Also it should be noted that the accounts that are to be interacted with must be on the same network. In this case the account must be present on the localnet.
+
+The docker container can be stopped by CTRL+C. At this point you're running a local JunoNetwork full-node. 
 
 #### Checking the node info
 
-We can then check the node info and status of the node. Open a new terminal :
+We can then check the node info of the node. Open a new terminal :
 
 ```bash
-polar node-info
-Creating client for network: default
+trestle node-info
 Network: default
-ChainId: enigma-pub-testnet-3
-Block height: 35
-Node Info:  {
-  node_info: {
-    protocol_version: { p2p: '7', block: '10', app: '0' },
-    id: '115aa0a629f5d70dd1d464bc7e42799e00f4edae',
-    listen_addr: 'tcp://0.0.0.0:26656',
-    network: 'enigma-pub-testnet-3',
-    version: '0.33.8',
-    channels: '4020212223303800',
-    moniker: 'banana',
-    other: { tx_index: 'on', rpc_address: 'tcp://0.0.0.0:26657' }
-  },
-  application_version: {
-    name: 'SecretNetwork',
-    server_name: 'secretd',
-    client_name: 'secretcli',
-    version: '1.0.4-debug-print-45-g038cd80b',
-    commit: '',
-    build_tags: 'netgo ledger sw',
-    go: 'go version go1.15.5 linux/amd64'
-  }
-}
+ChainId: uni-2
+Block height: 1358994
 ```
 
 #### Compile the contract
@@ -1017,7 +1007,7 @@ Node Info:  {
 Then we need to compile the contract. This can be done by the following command:
 
 ```bash
-polar compile
+trestle compile
 ```
 
 #### Running scripts on Localnet
@@ -1025,5 +1015,5 @@ polar compile
 To run any script on localnet open a new terminal and execute:
 
 ```bash
-polar run scripts/sample-script.js
+trestle run scripts/sample-script.js
 ```

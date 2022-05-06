@@ -443,37 +443,26 @@ describe("erc-20", () => {
 
 Detailed overview of testing is given the Guides section.
 
-<!-- #### Using REPL
-
 REPL (read–eval–print loop) gives the a console to do real time interactions with the network. Open the REPL using `trestle repl --network <network-name>`. Sample REPL interaction shown below as follows:
 
 ```bash
 $ trestle repl --network testnet
-★★★  Welcome to Trestle REPL ★★★
+★★★  Welcome to trestle REPL ★★★
 Try typing: config
 
 trestle> config
 {
-  name: 'testnet',
+  name: 'default',
   config: {
-    accounts: [ [Object], [Object], [Object], [Object] ],
     endpoint: 'https://rpc.uni.juno.deuslabs.fi/',
     chainId: 'uni-2',
     trustNode: true,
     keyringBackend: 'test',
-    types: {}
+    accounts: [ [Object], [Object] ]
   }
 }
-trestle> const contract_owner = trestle.getAccountByName("account_0");
-Creating client for network: testnet
-undefined
-trestle> const contract = new trestle.Contract('sample-project');
-Creating client for network: testnet
-undefined
-trestle> const deploy_response = await contract.deploy(contract_owner);
-Creating compressed .wasm file for sample_project...
 ```
-<!-- 
+
 When REPL is opened, `trestle` library is already imported, use `trestle.` to access classes and functions from the library. Trestle Runtime Environment can be access using `env` variable and `trestle.config.js` data can be accessed using `config` variable.
 
 #### Get node information
@@ -484,38 +473,9 @@ Node information can be fetched using `trestle node-info --network <network-name
 $ trestle node-info --network testnet
 Network: testnet
 ChainId: uni-2
-Block height: 752832
-Node Info:  {
-  node_info: {
-    protocol_version: { p2p: '8', block: '11', app: '0' },
-    id: 'ab6394e953e0b570bb1deeb5a8b387aa0dc6188a',
-    listen_addr: 'tcp://0.0.0.0:26656',
-    network: 'uni-2',
-    version: '0.34.12',
-    channels: '40202122233038606100',
-    moniker: 'sg-testnet-0',
-    other: { tx_index: 'on', rpc_address: 'tcp://0.0.0.0:26657' }
-  },
-  application_version: {
-    name: 'JunoNetwork',
-    server_name: 'junod',
-    version: '1.2.0-beta1-79-g660cb1d9',
-    commit: '',
-    build_tags: 'netgo ledger hw production',
-    go: 'go version go1.15.5 linux/amd64',
-    build_deps: [
-      'filippo.io/edwards25519@v1.0.0-beta.2',
-      'github.com/99designs/keyring@v1.1.6',
-      ...
-      'gopkg.in/ini.v1@v1.62.0',
-      'gopkg.in/yaml.v2@v2.4.0',
-      'gopkg.in/yaml.v3@v3.0.0-20210107192922-496545a6307b',
-      'nhooyr.io/websocket@v1.8.6'
-    ],
-    cosmos_sdk_version: 'v0.44.1'
-  }
-}
-``` -->
+Block height: 1358994
+```
+
 
 #### Cleanup artifacts
 
