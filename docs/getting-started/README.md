@@ -11,12 +11,6 @@ Trestle can be installed using `npm` or `yarn` using below commands:
 +    Using Yarn: `yarn global add juno-trestle`
 +    Using NPM: `npm install -g juno-trestle`
 
-Trestle requires a local rust environment available to be able to work. To install a rust environment, use command .
-```bash
-`$ cd infrastructure`
-`$ make setup-rust`
-```
-
 ## Quick Start
 
 This guide will explore the basics of creating a simple Trestle project.
