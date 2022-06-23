@@ -2,26 +2,26 @@
 
 ## Overview
 
-Trestle is a development framework for building juno contracts. The aim of the project is to make juno contracts development process simple, efficient and scalable. User can focus on logic of juno contract and not much about further steps in development. It facilitates features such as initiating project repo from contract templates, easy compilation of contracts, deployment, Interacting with contracts using schema and contract testing framework.
+Junokit is a development framework for building juno contracts. The aim of the project is to make juno contracts development process simple, efficient and scalable. User can focus on logic of juno contract and not much about further steps in development. It facilitates features such as initiating project repo from contract templates, easy compilation of contracts, deployment, Interacting with contracts using schema and contract testing framework.
 
 ## Installation
 
-Trestle can be installed using `npm` or `yarn` using below commands:
+Junokit can be installed using `npm` or `yarn` using below commands:
 
-+    Using Yarn: `yarn global add juno-trestle`
-+    Using NPM: `npm install -g juno-trestle`
++    Using Yarn: `yarn global add junokit`
++    Using NPM: `npm install -g junokit`
 
 ## Quick Start
 
-This guide will explore the basics of creating a simple Trestle project.
+This guide will explore the basics of creating a simple Junokit project.
 
-Trestle allows you to compile your Rust code, generate schema for it, run your scripts, tests and deploy to network, interact with contract instance on the network.
+Junokit allows you to compile your Rust code, generate schema for it, run your scripts, tests and deploy to network, interact with contract instance on the network.
 
-To create your Trestle project, run `trestle init <project-name>`:
+To create your Junokit project, run `junokit init <project-name>`:
 
 ```bash
-$ trestle init yellow
-★ Welcome to trestle v0.1.1
+$ junokit init yellow
+★ Welcome to junokit v0.1.1
 Initializing new project in /home/adarsh/Desktop/yellow.
 
 ★ Project created ★
@@ -32,8 +32,8 @@ You need to install these dependencies to run the sample project:
 Success! Created project at /home/adarsh/Desktop/yellow.
 Begin by typing:
   cd yellow
-  trestle help
-  trestle compile
+  junokit help
+  junokit compile
 ```
 
 The generated directory will have the following initial structure:
@@ -54,7 +54,7 @@ The generated directory will have the following initial structure:
 ├── package.json
 ├── Cargo.toml
 ├── Cargo.lock
-├── Trestle.config.js
+├── junokit.config.js
 ├── README.md
 ├── scripts
 │   └── sample-script.js
@@ -68,18 +68,18 @@ The `contracts/` directory has all the rust files for the contract logic. `scrip
 
 #### Listing tasks
 
-To see the possible tasks (commands) that are available, run `trestle` in your project's folder:
+To see the possible tasks (commands) that are available, run `junokit` in your project's folder:
 
 ```bash
-$ trestle
-trestle version 0.1.1
+$ junokit
+junokit version 0.1.1
 
-Usage: trestle [GLOBAL OPTIONS] <TASK> [TASK OPTIONS]
+Usage: junokit [GLOBAL OPTIONS] <TASK> [TASK OPTIONS]
 
 GLOBAL OPTIONS:
 
-      --command          	Name of trestle task ran. (default: "")
-      --config           	Path to trestle config file. 
+      --command          	Name of junokit task ran. (default: "")
+      --config           	Path to junokit config file. 
   -h, --help             	Shows this message, or a task's help if its name is provided 
       --network          	The network to connect to. (default: "default")
       --show-stack-traces	Show stack traces. 
@@ -96,17 +96,17 @@ AVAILABLE TASKS:
   init     	Initializes a new project in the given directory
   install  	Setup rust compiler
   node-info	Prints node info and status
-  repl     	Opens trestle console
+  repl     	Opens junokit console
   run      	Runs a user-defined script after compiling the project
   test     	Runs a user-defined test script after compiling the project
 
-To get help for a specific task run: trestle help [task]
+To get help for a specific task run: junokit help [task]
 
 ```
 
 This is the list of built-in tasks. This is your starting point to find out what tasks are available to run.
 
-If you take a look at the `trestle.config.js` file, you will find :
+If you take a look at the `junokit.config.js` file, you will find :
 
 ```js
 const accounts = [
@@ -154,10 +154,10 @@ module.exports = {
 
 #### Compiling contracts
 
-To compile the contracts, use command `trestle compile`. This will compile all the contracts in the project. To compile only one contracts or a subset of all contracts in the project, use command `trestle compile <contract-source-dir>`. To skip schema generation while compiling use `trestle compile --skip-schema`.
+To compile the contracts, use command `junokit compile`. This will compile all the contracts in the project. To compile only one contracts or a subset of all contracts in the project, use command `junokit compile <contract-source-dir>`. To skip schema generation while compiling use `junokit compile --skip-schema`.
 
 ```bash
-$ trestle compile
+$ junokit compile
 🛠 Compiling your contract in directory: contracts
 ===========================================
 warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
@@ -341,7 +341,7 @@ User scripts are a way to define the flow of interacting with contracts on some 
 A sample script `scripts/sample-script.js` is available in the boilerplate. Contents of the script is as follows:
 
 ```js
-const { Contract, getAccountByName, getLogs } = require("juno-trestle");
+const { Contract, getAccountByName, getLogs } = require("junokit");
 
 async function run() {
   const contract_owner = getAccountByName("account_0");
@@ -392,7 +392,7 @@ module.exports = { default: run };
 
 The script above deploys, inits contract `sample-project` using account `account_0` and add `100000000` amount `ERC` token to the contract_owner address. It then query balance of contract_owner account using `query.balance`. After that it transfers `50000000` token from contract_owner account to the other account address using `tx.transfer`. ANd again query the contract_owner address.
 
-For the above script to be able to run, an account with name `account_0` must be present in `trestle.config.js` and contract artifacts (compiled `.wasm` and schema `.json` files) in `artifacts/` dir must be present for contract `sample-project`.
+For the above script to be able to run, an account with name `account_0` must be present in `junokit.config.js` and contract artifacts (compiled `.wasm` and schema `.json` files) in `artifacts/` dir must be present for contract `sample-project`.
 
 #### Running test scripts
 
@@ -402,9 +402,9 @@ A sample test script `test/sample-test.js` is available in the boilerplate. Cont
 
 ```js
 const { use } = require("chai");
-const { Contract, getAccountByName, trestleChai } = require("juno-trestle");
+const { Contract, getAccountByName, junokitChai } = require("junokit");
 
-use(trestleChai);
+use(junokitChai);
 
 describe("erc-20", () => {
 
@@ -437,14 +437,14 @@ describe("erc-20", () => {
 
 Detailed overview of testing is given the Guides section.
 
-REPL (read–eval–print loop) gives the a console to do real time interactions with the network. Open the REPL using `trestle repl --network <network-name>`. Sample REPL interaction shown below as follows:
+REPL (read–eval–print loop) gives the a console to do real time interactions with the network. Open the REPL using `junokit repl --network <network-name>`. Sample REPL interaction shown below as follows:
 
 ```bash
-$ trestle repl --network testnet
-★★★  Welcome to trestle REPL ★★★
+$ junokit repl --network testnet
+★★★  Welcome to junokit REPL ★★★
 Try typing: config
 
-trestle> config
+junokit> config
 {
   name: 'default',
   config: {
@@ -457,14 +457,14 @@ trestle> config
 }
 ```
 
-When REPL is opened, `trestle` library is already imported, use `trestle.` to access classes and functions from the library. Trestle Runtime Environment can be access using `env` variable and `trestle.config.js` data can be accessed using `config` variable.
+When REPL is opened, `junokit` library is already imported, use `junokit.` to access classes and functions from the library. junokit Runtime Environment can be access using `env` variable and `junokit.config.js` data can be accessed using `config` variable.
 
 #### Get node information
 
-Node information can be fetched using `trestle node-info --network <network-name>` as follows:
+Node information can be fetched using `junokit node-info --network <network-name>` as follows:
 
 ```bash
-$ trestle node-info --network testnet
+$ junokit node-info --network testnet
 Network: testnet
 ChainId: uni-2
 Block height: 1358994
@@ -473,4 +473,4 @@ Block height: 1358994
 
 #### Cleanup artifacts
 
-To clear artifacts data, use `trestle clean` and to clean artifacts for only one contract, use `trestle clean <contract-name>`.
+To clear artifacts data, use `junokit clean` and to clean artifacts for only one contract, use `junokit clean <contract-name>`.

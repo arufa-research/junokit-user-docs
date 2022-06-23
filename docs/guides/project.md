@@ -2,15 +2,15 @@
 
 ### Setting up a project
 
-Project setup can be broken down to 3 steps broadly, which are boiler plate generation, updating project name and updating `trestle.config.js` file.
+Project setup can be broken down to 3 steps broadly, which are boiler plate generation, updating project name and updating `junokit.config.js` file.
 
 #### Boilerplate code
 
-Use command `trestle init <project-name>` to generate boilerplate code. Use command `trestle init <project-name> <template-name>` to generate boilerplate code using a particular template (template names can be found from repository `https://github.com/arufa-research/trestle-templates`).
+Use command `junokit init <project-name>` to generate boilerplate code. Use command `junokit init <project-name> <template-name>` to generate boilerplate code using a particular template (template names can be found from repository `https://github.com/arufa-research/junokit-templates`).
 
 ```bash
-$ trestle init yellow
-★ Welcome to trestle v0.1.1
+$ junokit init yellow
+★ Welcome to junokit v0.1.1
 Initializing new project in /home/adarsh/Desktop/yellow.
 
 ★ Project created ★
@@ -21,8 +21,8 @@ You need to install these dependencies to run the sample project:
 Success! Created project at /home/adarsh/Desktop/yellow.
 Begin by typing:
   cd yellow
-  trestle help
-  trestle compile
+  junokit help
+  junokit compile
 ```
 
 The generated directory will have the following initial structure:
@@ -43,7 +43,7 @@ The generated directory will have the following initial structure:
 ├── package.json
 ├── Cargo.toml
 ├── Cargo.lock
-├── Trestle.config.js
+├── junokit.config.js
 ├── README.md
 ├── scripts
 │   └── sample-script.js
@@ -85,7 +85,7 @@ contracts/examples/schema.rs:use yellow::state::Constants;
 scripts/sample-script.js:  const contract = new Contract('yellow', runtimeEnv);
 ```
 
-Now compiling using `trestle compile` would create following structure in `artifacts/` dir:
+Now compiling using `junokit compile` would create following structure in `artifacts/` dir:
 
 ```bash
 artifacts/
@@ -102,9 +102,9 @@ artifacts/
 2 directories, 7 files
 ```
 
-#### trestle config
+#### junokit config
 
-trestle uses config file `trestle.config.js` to execute tasks for the given project. Initial contents of `trestle.config.js` file are explained below:
+junokit uses config file `junokit.config.js` to execute tasks for the given project. Initial contents of `junokit.config.js` file are explained below:
 
 **Network config**. Has following parameters:
 

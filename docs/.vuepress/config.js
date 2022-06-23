@@ -10,7 +10,7 @@ module.exports = {
             {text: 'Videos', link: 'https://www.youtube.com/watch?v=amAlwxCEgnI'},
         ],
         lastUpdated: true,
-        repo: "arufa-research/trestle-user-docs",
+        repo: "arufa-research/junokit-user-docs",
         docsDir: "docs",
         docsBranch: "master",
         editLinkText: "Help us improve this page!",
@@ -31,7 +31,7 @@ module.exports = {
                       ["/guides/compiling-contracts.md", "Compiling your contracts", 0],
                       ["/guides/writing-scripts.md", "Writing Scripts", 0],
                       ["/guides/testing.md", "Testing Contracts", 0],
-                      ["/guides/using-localenet.md", "Using localnet with trestle", 0],
+                      ["/guides/using-localenet.md", "Using localnet with junokit", 0],
                     ],
                   },
             ]

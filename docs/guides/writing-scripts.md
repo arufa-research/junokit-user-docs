@@ -2,10 +2,10 @@
 
 #### Sample script walkthrough
 
-Trestle boilerplate code has sample script `scripts/sample-script.js` with following content: 
+Junokit boilerplate code has sample script `scripts/sample-script.js` with following content: 
 
 ```js
-const { Contract, getAccountByName, getLogs } = require("juno-trestle");
+const { Contract, getAccountByName, getLogs } = require("junokit");
 
 async function run() {
   const contract_owner = getAccountByName("account_0");
@@ -56,13 +56,13 @@ module.exports = { default: run };
 
 Following is a line-by-line breakdown of the above script:
 
-+ Import `Contract` class and `getAccountByName` method from `juno-trestle` library.
++ Import `Contract` class and `getAccountByName` method from `junokit` library.
 
 ```js
-const { Contract, getAccountByName } = require("juno-trestle");
+const { Contract, getAccountByName } = require("junokit");
 ```
 
-+ `run` function definition. It should have the same signature as below with no argument. This `run` function is called by trestle.
++ `run` function definition. It should have the same signature as below with no argument. This `run` function is called by junokit.
 
 ```js
 async function run () {
@@ -80,13 +80,13 @@ async function run () {
   const contract = new Contract('sample-project');
 ```
 
-+ Load schema files for contract `sample-json`. Will generate error if schema files are not present, so make sure to run `trestle compile` before running this.
++ Load schema files for contract `sample-json`. Will generate error if schema files are not present, so make sure to run `junokit compile` before running this.
 
 ```js
   await contract.parseSchema();
 ```
 
-+ Deploy the contract. Network is specified in the `trestle run scripts/<script-name> --network <network-name>` command.
++ Deploy the contract. Network is specified in the `junokit run scripts/<script-name> --network <network-name>` command.
 
 ```js
   const deploy_response = await contract.deploy(contract_owner);
@@ -121,19 +121,19 @@ async function run () {
   let balance = await contract.query.balance({ "address": contract_owner.account.address });;
 ```
 
-+ Export `run` function as default for the script. Default function is called by trestle runner.
++ Export `run` function as default for the script. Default function is called by junokit runner.
 
 ```js
 module.exports = { default: run };
 ```
 
-#### trestle Runtime Environment
+#### junokit Runtime Environment
 
-trestle runtime environment is used internally by trestle. It is created when a trestle task is executed using bash command `trestle ...`. It can be accessed in REPL using variable `env`. It has following parameters:
+junokit runtime environment is used internally by junokit. It is created when a junokit task is executed using bash command `junokit ...`. It can be accessed in REPL using variable `env`. It has following parameters:
 
 + **config**: Has paths of config file, contract sources, artifacts, project root and test path. Other config values such as networks config and mocha timeout.
 
-+ **runtimeArgs**: Runtime metadata such as network to use etc. Network can be specified in a trestle command like `trestle ... --network <network-name>`.
++ **runtimeArgs**: Runtime metadata such as network to use etc. Network can be specified in a junokit command like `junokit ... --network <network-name>`.
 
 + **tasks**: List of available tasks with details.
 
@@ -206,7 +206,7 @@ Gives following response:
 To list contract's execute methods, print `contract.tx`.
 
 ```js
-trestle> contract.tx
+junokit> contract.tx
 { Approve: [Function (anonymous)], Transfer: [Function (anonymous), TransferFrom: [Function (anonymous), Burn: [Function (anonymous)] }
 ```
 
@@ -215,13 +215,13 @@ trestle> contract.tx
 To list contract's query methods, print `contract.query`.
 
 ```js
-trestle> contract.query
+junokit> contract.query
 { Balance: [Function (anonymous), Allowance: [Function (anonymous)] }
 ```
 
 #### getAccountByName
 
-In the sample `trestle.config.js` file, the accounts are defined as below:
+In the sample `junokit.config.js` file, the accounts are defined as below:
 
 ```js
 const accounts = [
@@ -241,7 +241,7 @@ const accounts = [
 These accounts can be easily accessed inside the scripts or in repl using the method, `getAccountByName(<account_name>)`, for example:
 
 ```js
-const { getAccountByName } = require("juno-trestle");
+const { getAccountByName } = require("junokit");
 
 const account_0 = getAccountByName("account_0");
 const account_1 = getAccountByName("account_1");
@@ -256,7 +256,7 @@ console.log(account_0.mnemonic); // omit sphere nurse rib tribe suffer web accou
 This method is used to generate new accounts and then can be filled with some balance using a testnet faucet `https://stakely.io/en/faucet/juno` (faucet are only for testnets). 
 
 ```js
-const { createAccounts } = require("juno-trestle");
+const { createAccounts } = require("junokit");
 
 const res = await createAccounts(1); // array of one account object
 const res = await createAccounts(3);  // array of three account objects
@@ -266,6 +266,6 @@ const res = await createAccounts(3);  // array of three account objects
 
 Checkpoints store the metadata of contract instance on the network. It stores the deploy metadata (codeId, contractCodeHash, deployTimestamp) and instantiate metadata (contractAddress, instantiateTimestamp). This comes handy when a script is run which deploys, inits and does some interactions with the contracts. 
 
-Suppose the script fails after init step and now script is to be rerun after some fixes in the contract, here one does not want for the contract to be deployed and instantiated again, so trestle picks up the saved metadata from checkpoints file and directly skips to part after init and uses the previously deployed instance and user does not have to pay the extra gas and wait extra time to deploy, init the contract again. Same happens when there is error before init and rerun skips deploy and directly executes init step.
+Suppose the script fails after init step and now script is to be rerun after some fixes in the contract, here one does not want for the contract to be deployed and instantiated again, so junokit picks up the saved metadata from checkpoints file and directly skips to part after init and uses the previously deployed instance and user does not have to pay the extra gas and wait extra time to deploy, init the contract again. Same happens when there is error before init and rerun skips deploy and directly executes init step.
 
-To skip using checkpoints when running script, use `trestle run <script-path> --skip-checkpoints`.
+To skip using checkpoints when running script, use `junokit run <script-path> --skip-checkpoints`.

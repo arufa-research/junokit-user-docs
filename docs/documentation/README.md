@@ -4,28 +4,28 @@
 
 ### Overview
 
-Trestle is a development framework for building juno contracts. The aim of the project is to make juno contracts development process simple, efficient and scalable. User can focus on logic of juno contract and not much about further steps in development. It facilitates features such as initiating project repo from contract templates, easy compilation of contracts, deployment, Interacting with contracts using schema and contract testing framework.
+Junokit is a development framework for building juno contracts. The aim of the project is to make juno contracts development process simple, efficient and scalable. User can focus on logic of juno contract and not much about further steps in development. It facilitates features such as initiating project repo from contract templates, easy compilation of contracts, deployment, Interacting with contracts using schema and contract testing framework.
 
 ### Installation
 
-Trestle can be installed using `npm` or `yarn` using below commands:
+Junokit can be installed using `npm` or `yarn` using below commands:
 
-+    Using Yarn: `yarn global add juno-trestle`
-+    Using NPM: `npm install -g juno-trestle`
++    Using Yarn: `yarn global add junokit`
++    Using NPM: `npm install -g junokit`
 
-Trestle requires a local rust environment available to be able to work. To install a rust environment, use command `trestle install`.
+Junokit requires a local rust environment available to be able to work. To install a rust environment, use command `junokit install`.
 
 ### Quick Start
 
-This guide will explore the basics of creating a simple Trestle project.
+This guide will explore the basics of creating a simple Junokit project.
 
-Trestle allows you to compile your Rust code, generate schema for it, run your scripts, tests and deploy to network, interact with contract instance on the network.
+Junokit allows you to compile your Rust code, generate schema for it, run your scripts, tests and deploy to network, interact with contract instance on the network.
 
-To create your Trestle project, run `trestle init <project-name>`:
+To create your Junokit project, run `junokit init <project-name>`:
 
 ```bash
-$ trestle init yellow
-★ Welcome to trestle v0.1.0
+$ junokit init yellow
+★ Welcome to junokit v0.1.0
 Initializing new project in /home/ay/yellow.
 
 ★ Project created ★
@@ -36,8 +36,8 @@ You need to install these dependencies to run the sample project:
 Success! Created project at /home/ay/yellow.
 Begin by typing:
   cd yellow
-  trestle help
-  trestle compile
+  junokit help
+  junokit compile
 ```
 
 The generated directory will have the following initial structure:
@@ -64,7 +64,7 @@ The generated directory will have the following initial structure:
 │   └── sample-script.js
 ├── test
 │   └── sample-test.js
-└── trestle.config.js
+└── junokit.config.js
 
 6 directories, 17 files
 ```
@@ -73,17 +73,17 @@ The `contracts/` directory has all the rust files for the contract logic. `scrip
 
 #### Listing tasks
 
-To see the possible tasks (commands) that are available, run `trestle` in your project's folder:
+To see the possible tasks (commands) that are available, run `junokit` in your project's folder:
 
 ```bash
-$ trestle
-trestle version 0.1.0
+$ junokit
+junokit version 0.1.0
 
-Usage: trestle [GLOBAL OPTIONS] <TASK> [TASK OPTIONS]
+Usage: junokit [GLOBAL OPTIONS] <TASK> [TASK OPTIONS]
 
 GLOBAL OPTIONS:
 
-      --config           	Path to Trestle config file. 
+      --config           	Path to junokit config file. 
   -h, --help             	Shows this message, or a task's help if its name is provided 
       --network          	The network to connect to. (default: "default")
       --show-stack-traces	Show stack traces. 
@@ -99,17 +99,17 @@ AVAILABLE TASKS:
   init     	Initializes a new project in the given directory
   install  	Setup rust compiler
   node-info	Prints node info and status
-  repl     	Opens trestle console
+  repl     	Opens junokit console
   run      	Runs a user-defined script after compiling the project
   test     	Runs a user-defined test script after compiling the project
 
-To get help for a specific task run: trestle help [task]
+To get help for a specific task run: junokit help [task]
 
 ```
 
 This is the list of built-in tasks. This is your starting point to find out what tasks are available to run.
 
-If you take a look at the `trestle.config.js` file, you will find :
+If you take a look at the `junokit.config.js` file, you will find :
 
 ```js
 const accounts = [
@@ -157,7 +157,7 @@ module.exports = {
 
 #### Compiling contracts
 
-To compile the contracts, use command `trestle compile`. This will compile all the contracts in the project. To compile only one contracts or a subset of all contracts in the project, use command `trestle compile <contract-source-dir>`. To skip schema generation while compiling use `trestle compile --skip-schema`.
+To compile the contracts, use command `junokit compile`. This will compile all the contracts in the project. To compile only one contracts or a subset of all contracts in the project, use command `junokit compile <contract-source-dir>`. To skip schema generation while compiling use `junokit compile --skip-schema`.
 
 This command will generate compiled `.wasm` files in `artifacts/contracts/` dir and schema `.json` files in `artifacts/schema/` dir.
 
@@ -168,10 +168,10 @@ User scripts are a way to define the flow of interacting with contracts on some 
 A sample script `scripts/sample-script.js` is available in the boilerplate. Contents of the script is as follows:
 
 To run it:
-`trestle run scripts/sample-script.js`
+`junokit run scripts/sample-script.js`
 
 ```js
-const { Contract, getAccountByName, getLogs } = require("juno-trestle");
+const { Contract, getAccountByName, getLogs } = require("junokit");
 
 async function run() {
   const contract_owner = getAccountByName("account_1");
@@ -224,21 +224,21 @@ module.exports = { default: run };
 
 The script above deploys, inits contract `cw-erc20` using account `account_1`. It then transfers the some tokens using transaction `tx.transfer()` and finally queries count using query `query.balance()`.
 
-For the above script to be able to run, an account with name `account_1` must be present in `trestle.config.js` and contract artifacts (compiled `.wasm` and schema `.json` files) in `artifacts/` dir must be present for contract `cw-erc20`.
+For the above script to be able to run, an account with name `account_1` must be present in `junokit.config.js` and contract artifacts (compiled `.wasm` and schema `.json` files) in `artifacts/` dir must be present for contract `cw-erc20`.
 
 #### Running test scripts
 
 Test scripts are used to test the contract after deploying it to the network and asserting on the interactions with the contract instance.
 
-To run it: `trestle test`
+To run it: `junokit test`
 
 A sample test script `test/sample-test.js` is available in the boilerplate. Contents of the script is as follows:
 
 ```js
 const { use } = require("chai");
-const { Contract, getAccountByName, trestleChai } = require("juno-trestle");
+const { Contract, getAccountByName, junokitChai } = require("junokit");
 
-use(trestleChai);
+use(junokitChai);
 
 describe("erc-20", () => {
 
@@ -273,14 +273,14 @@ Detailed overview of testing is given the Guides section.
 
 #### Using REPL
 
-REPL (read–eval–print loop) gives the a console to do real time interactions with the network. Open the REPL using `trestle repl --network <network-name>`. Sample REPL interaction shown below as follows:
+REPL (read–eval–print loop) gives the a console to do real time interactions with the network. Open the REPL using `junokit repl --network <network-name>`. Sample REPL interaction shown below as follows:
 
 ```bash
-$ trestle repl --network testnet
-★★★  Welcome to trestle REPL ★★★
+$ junokit repl --network testnet
+★★★  Welcome to junokit REPL ★★★
 Try typing: config
 
-trestle> config
+junokit> config
 {
   name: 'default',
   config: {
@@ -293,14 +293,14 @@ trestle> config
 }
 ```
 
-When REPL is opened, `trestle` library is already imported, use `trestle.` to access classes and functions from the library. Trestle Runtime Environment can be access using `env` variable and `trestle.config.js` data can be accessed using `config` variable.
+When REPL is opened, `junokit` library is already imported, use `junokit.` to access classes and functions from the library. junokit Runtime Environment can be access using `env` variable and `junokit.config.js` data can be accessed using `config` variable.
 
 #### Get node information
 
-Node information can be fetched using `trestle node-info --network <network-name>` as follows:
+Node information can be fetched using `junokit node-info --network <network-name>` as follows:
 
 ```bash
-$ trestle node-info --network testnet
+$ junokit node-info --network testnet
 Network: testnet
 ChainId: uni-2
 Block height: 1358994
@@ -308,21 +308,21 @@ Block height: 1358994
 
 #### Cleanup artifacts
 
-To clear artifacts data, use `trestle clean` and to clean artifacts for only one contract, use `trestle clean <contract-name>`.
+To clear artifacts data, use `junokit clean` and to clean artifacts for only one contract, use `junokit clean <contract-name>`.
 
 ## Guides
 
 ### Setting up a project
 
-Project setup can be broken down to 3 steps broadly, which are boiler plate generation, updating project name and updating `trestle.config.js` file.
+Project setup can be broken down to 3 steps broadly, which are boiler plate generation, updating project name and updating `junokit.config.js` file.
 
 #### Boilerplate code
 
-Use command `trestle init <project-name>` to generate boilerplate code. Use command `trestle init <project-name> <template-name>` to generate boilerplate code using a particular template (template names can be found from repository `https://github.com/arufa-research/trestle-templates`).
+Use command `junokit init <project-name>` to generate boilerplate code. Use command `junokit init <project-name> <template-name>` to generate boilerplate code using a particular template (template names can be found from repository `https://github.com/arufa-research/junokit-templates`).
 
 ```bash
-$ trestle init yellow
-★ Welcome to trestle v0.1.1
+$ junokit init yellow
+★ Welcome to junokit v0.1.1
 Initializing new project in /home/adarsh/Desktop/yellow.
 
 ★ Project created ★
@@ -333,8 +333,8 @@ You need to install these dependencies to run the sample project:
 Success! Created project at /home/adarsh/Desktop/yellow.
 Begin by typing:
   cd yellow
-  trestle help
-  trestle compile
+  junokit help
+  junokit compile
 ```
 
 The generated directory will have the following initial structure:
@@ -355,7 +355,7 @@ The generated directory will have the following initial structure:
 ├── package.json
 ├── Cargo.toml
 ├── Cargo.lock
-├── Trestle.config.js
+├── junokit.config.js
 ├── README.md
 ├── scripts
 │   └── sample-script.js
@@ -397,7 +397,7 @@ contracts/examples/schema.rs:use yellow::state::Constants;
 scripts/sample-script.js:  const contract = new Contract('yellow', runtimeEnv);
 ```
 
-Now compiling using `trestle compile` would create following structure in `artifacts/` dir:
+Now compiling using `junokit compile` would create following structure in `artifacts/` dir:
 
 ```bash
 artifacts/
@@ -414,9 +414,9 @@ artifacts/
 2 directories, 7 files
 ```
 
-#### trestle config
+#### junokit config
 
-trestle uses config file `trestle.config.js` to execute tasks for the given project. Initial contents of `trestle.config.js` file are explained below:
+junokit uses config file `junokit.config.js` to execute tasks for the given project. Initial contents of `junokit.config.js` file are explained below:
 
 **Network config**. Has following parameters:
 
@@ -481,19 +481,19 @@ mocha: {
 ```
 ### Compiling your contracts
 
-Compiling contracts can be done using the command `trestle compile`.
+Compiling contracts can be done using the command `junokit compile`.
 
 #### Compile all contracts
 
-`trestle compile` by default compiles all the contracts in the `contracts/` directory. For each contract compiled, corresponding `.wasm` file is stored in the `artifacts/contracts` directory created in project's root directory.
+`junokit compile` by default compiles all the contracts in the `contracts/` directory. For each contract compiled, corresponding `.wasm` file is stored in the `artifacts/contracts` directory created in project's root directory.
 
 #### Compile one contract
 
-To compile only one contract or a subset of all contracts in the `contract/` directory, use command `trestle compile <sourcePaths>` and this can look something like `trestle compile contracts/sample-project` or `trestle compile contracts/sample-project-1 contracts/sample-project-2`.
+To compile only one contract or a subset of all contracts in the `contract/` directory, use command `junokit compile <sourcePaths>` and this can look something like `junokit compile contracts/sample-project` or `junokit compile contracts/sample-project-1 contracts/sample-project-2`.
 
 #### Schema generation
 
-Schema is also generated alongside the compiled `.wasm` file for each of the contract compiled using `trestle compile` command. Schema files are `.json` files (stored inside `artifacts/schema/`) directory and there are multiple `.json` files per contract but only one `.wasm` compiled file per contract. To skip schema generation while compiling use `trestle compile --skip-schema`.
+Schema is also generated alongside the compiled `.wasm` file for each of the contract compiled using `junokit compile` command. Schema files are `.json` files (stored inside `artifacts/schema/`) directory and there are multiple `.json` files per contract but only one `.wasm` compiled file per contract. To skip schema generation while compiling use `junokit compile --skip-schema`.
 
 Single contract `artifacts/` directory structure:
 
@@ -540,10 +540,10 @@ Multi contract `artifacts/` directory structure:
 
 #### Sample script walkthrough
 
-Trestle boilerplate code has sample script `scripts/sample-script.js` with following content: 
+Junokit boilerplate code has sample script `scripts/sample-script.js` with following content: 
 
 ```js
-const { Contract, getAccountByName, getLogs } = require("juno-trestle");
+const { Contract, getAccountByName, getLogs } = require("junokit");
 
 async function run() {
   const contract_owner = getAccountByName("account_0");
@@ -594,13 +594,13 @@ module.exports = { default: run };
 
 Following is a line-by-line breakdown of the above script:
 
-+ Import `Contract` class and `getAccountByName` method from `juno-trestle` library.
++ Import `Contract` class and `getAccountByName` method from `junokit` library.
 
 ```js
-const { Contract, getAccountByName } = require("juno-trestle");
+const { Contract, getAccountByName } = require("junokit");
 ```
 
-+ `run` function definition. It should have the same signature as below with no argument. This `run` function is called by trestle.
++ `run` function definition. It should have the same signature as below with no argument. This `run` function is called by junokit.
 
 ```js
 async function run () {
@@ -618,13 +618,13 @@ async function run () {
   const contract = new Contract('sample-project');
 ```
 
-+ Load schema files for contract `sample-json`. Will generate error if schema files are not present, so make sure to run `trestle compile` before running this.
++ Load schema files for contract `sample-json`. Will generate error if schema files are not present, so make sure to run `junokit compile` before running this.
 
 ```js
   await contract.parseSchema();
 ```
 
-+ Deploy the contract. Network is specified in the `trestle run scripts/<script-name> --network <network-name>` command.
++ Deploy the contract. Network is specified in the `junokit run scripts/<script-name> --network <network-name>` command.
 
 ```js
   const deploy_response = await contract.deploy(contract_owner);
@@ -659,19 +659,19 @@ async function run () {
   let balance = await contract.query.balance({ "address": contract_owner.account.address });;
 ```
 
-+ Export `run` function as default for the script. Default function is called by trestle runner.
++ Export `run` function as default for the script. Default function is called by junokit runner.
 
 ```js
 module.exports = { default: run };
 ```
 
-#### trestle Runtime Environment
+#### Junokit Runtime Environment
 
-trestle runtime environment is used internally by trestle. It is created when a trestle task is executed using bash command `trestle ...`. It can be accessed in REPL using variable `env`. It has following parameters:
+junokit runtime environment is used internally by junokit. It is created when a junokit task is executed using bash command `junokit ...`. It can be accessed in REPL using variable `env`. It has following parameters:
 
 + **config**: Has paths of config file, contract sources, artifacts, project root and test path. Other config values such as networks config and mocha timeout.
 
-+ **runtimeArgs**: Runtime metadata such as network to use etc. Network can be specified in a trestle command like `trestle ... --network <network-name>`.
++ **runtimeArgs**: Runtime metadata such as network to use etc. Network can be specified in a junokit command like `junokit ... --network <network-name>`.
 
 + **tasks**: List of available tasks with details.
 
@@ -744,7 +744,7 @@ Gives following response:
 To list contract's execute methods, print `contract.tx`.
 
 ```js
-trestle> contract.tx
+junokit> contract.tx
 { Approve: [Function (anonymous)], Transfer: [Function (anonymous), TransferFrom: [Function (anonymous), Burn: [Function (anonymous)] }
 ```
 
@@ -753,13 +753,13 @@ trestle> contract.tx
 To list contract's query methods, print `contract.query`.
 
 ```js
-trestle> contract.query
+junokit> contract.query
 { Balance: [Function (anonymous), Allowance: [Function (anonymous)] }
 ```
 
 #### getAccountByName
 
-In the sample `trestle.config.js` file, the accounts are defined as below:
+In the sample `junokit.config.js` file, the accounts are defined as below:
 
 ```js
 const accounts = [
@@ -779,7 +779,7 @@ const accounts = [
 These accounts can be easily accessed inside the scripts or in repl using the method, `getAccountByName(<account_name>)`, for example:
 
 ```js
-const { getAccountByName } = require("juno-trestle");
+const { getAccountByName } = require("junokit");
 
 const account_0 = getAccountByName("account_0");
 const account_1 = getAccountByName("account_1");
@@ -794,7 +794,7 @@ console.log(account_0.mnemonic); // omit sphere nurse rib tribe suffer web accou
 This method is used to generate new accounts and then can be filled with some balance using a testnet faucet `https://stakely.io/en/faucet/juno` (faucet are only for testnets). 
 
 ```js
-const { createAccounts } = require("juno-trestle");
+const { createAccounts } = require("junokit");
 
 const res = await createAccounts(1); // array of one account object
 const res = await createAccounts(3);  // array of three account objects
@@ -804,14 +804,14 @@ const res = await createAccounts(3);  // array of three account objects
 
 Checkpoints store the metadata of contract instance on the network. It stores the deploy metadata (codeId, contractCodeHash, deployTimestamp) and instantiate metadata (contractAddress, instantiateTimestamp). This comes handy when a script is run which deploys, inits and does some interactions with the contracts. 
 
-Suppose the script fails after init step and now script is to be rerun after some fixes in the contract, here one does not want for the contract to be deployed and instantiated again, so trestle picks up the saved metadata from checkpoints file and directly skips to part after init and uses the previously deployed instance and user does not have to pay the extra gas and wait extra time to deploy, init the contract again. Same happens when there is error before init and rerun skips deploy and directly executes init step.
+Suppose the script fails after init step and now script is to be rerun after some fixes in the contract, here one does not want for the contract to be deployed and instantiated again, so junokit picks up the saved metadata from checkpoints file and directly skips to part after init and uses the previously deployed instance and user does not have to pay the extra gas and wait extra time to deploy, init the contract again. Same happens when there is error before init and rerun skips deploy and directly executes init step.
 
-To skip using checkpoints when running script, use `trestle run <script-path> --skip-checkpoints`.
+To skip using checkpoints when running script, use `junokit run <script-path> --skip-checkpoints`.
 
 
 ### Testing contracts
 
-Contracts can be tested in two ways, one by writing rust tests in the `contract.rs` file itself, and other way is to write a mocha test script that interacts with deployed contract and assert the returned values. There are examples for both in the `sample-project` created after `trestle init` step.
+Contracts can be tested in two ways, one by writing rust tests in the `contract.rs` file itself, and other way is to write a mocha test script that interacts with deployed contract and assert the returned values. There are examples for both in the `sample-project` created after `junokit init` step.
 
 #### Rust tests
 
@@ -819,19 +819,19 @@ These tests can be run by going into the contract's directory having `Cargo.toml
 
 #### Client interaction tests
 
-These tests can be run by running the command `trestle test --network <network-name>`.
+These tests can be run by running the command `junokit test --network <network-name>`.
 
 #### Test scripts
 
-trestle has support for user to write tests on top of js interactions with the deployed contract instance. These scripts are stored in the `test/` directory in the project's root directory.
+junokit has support for user to write tests on top of js interactions with the deployed contract instance. These scripts are stored in the `test/` directory in the project's root directory.
 
-A trestle test script has the same structure as a mocha test file with `describe` and `it` blocks, a sample test is explained below:
+A junokit test script has the same structure as a mocha test file with `describe` and `it` blocks, a sample test is explained below:
 
 ```js
 const { use } = require("chai");
-const { Contract, getAccountByName, trestleChai } = require("juno-trestle");
+const { Contract, getAccountByName, junokitChai } = require("junokit");
 
-use(trestleChai);
+use(junokitChai);
 
 describe("erc-20", () => {
 
@@ -894,13 +894,13 @@ describe("erc-20", () => {
 
 Following is a breakdown of the above script:
 
-+ Import `expect` and `use` from chai, `Contract`, `getAccountByName` and `trestleChai` from juno-trestle and add trestle asserts to chai using `use(trestleChai)`.
++ Import `expect` and `use` from chai, `Contract`, `getAccountByName` and `junokitChai` from junokit and add junokit asserts to chai using `use(junokitChai)`.
 
 ```js
 const { expect, use } = require("chai");
-const { Contract, getAccountByName, trestleChai } = require("juno-trestle");
+const { Contract, getAccountByName, junokitChai } = require("junokit");
 
-use(trestleChai);
+use(junokitChai);
 ```
 
 + `setup()` method does the initial common steps for each test, such as creating `Account` objects, creating `Contract` objects, parsing contract's schema files and deploying the contract.
@@ -923,19 +923,19 @@ use(trestleChai);
   }
 ```
 
-+ First test: Deploys and inits the contract . Trestle automatically creates dynamic label for test deploys, which means that below label "deploy test" is not used instead "deploy <contract_name> <curr_ts>" is used which is always unique, so you don't have to manually change label for each test run.
++ First test: Deploys and inits the contract . junokit automatically creates dynamic label for test deploys, which means that below label "deploy test" is not used instead "deploy <contract_name> <curr_ts>" is used which is always unique, so you don't have to manually change label for each test run.
 
 **Note:** It is fine to have `deploy`, `instantiate` in each test as they are not executed multiple times for a given contract. Moving these steps in the `setup()` method is fine.
 
 #### Chai matchers
 
-A set of chai matchers, makes your test easy to write and read. Before you can start using the matchers, you have to tell chai to use the trestleChai plugin:
+A set of chai matchers, makes your test easy to write and read. Before you can start using the matchers, you have to tell chai to use the junokitChai plugin:
 
 ```js
 const { expect, use } = require("chai");
-const { Contract, getAccountByName, trestleChai } = require("juno-trestle");
+const { Contract, getAccountByName, junokitChai } = require("junokit");
 
-use(trestleChai);
+use(junokitChai);
 ```
 
 Below is the list of available matchers:
@@ -960,7 +960,7 @@ await expect(contract.query.balance({ "address": contract_owner.account.address 
 ## API -->
 
 
-### Using localnet with trestle
+### Using localnet with junokit
 
 #### Setup the Local Developer Testnet
 
@@ -980,14 +980,14 @@ docker run -it \
   ghcr.io/cosmoscontracts/juno:v5.0.0 \
   ./setup_and_run.sh juno16g2rahf5846rxzp3fwlswy08fz8ccuwk03k57y 
 ```
-Copy mnemonics from terminal to the trestle.config.js file- 
+Copy mnemonics from terminal to the junokit.config.js file- 
 ```bash
 `mnemonic : camera battle reward view obtain obvious stadium display harbor original link trigger venture tip exhibit ladder ride captain breeze replace brand tape narrow recycle`
 ```
 There is a prebuilt docker image for you to use. This will start a container with a seeded user. The address and mnemonic used here can be found in the docker/ directory of the juno network repo. When you're done, you can use ctrl+c to stop the container running.
 
 
-we need to copy the name, address and mnemonic info of the account that we get on running the docker in our trestle.config.js file. Also it should be noted that the accounts that are to be interacted with must be on the same network. In this case the account must be present on the localnet.
+we need to copy the name, address and mnemonic info of the account that we get on running the docker in our junokit.config.js file. Also it should be noted that the accounts that are to be interacted with must be on the same network. In this case the account must be present on the localnet.
 
 The docker container can be stopped by CTRL+C. At this point you're running a local JunoNetwork full-node. 
 
@@ -996,7 +996,7 @@ The docker container can be stopped by CTRL+C. At this point you're running a lo
 We can then check the node info of the node. Open a new terminal :
 
 ```bash
-trestle node-info
+junokit node-info
 Network: default
 ChainId: uni-2
 Block height: 1358994
@@ -1007,7 +1007,7 @@ Block height: 1358994
 Then we need to compile the contract. This can be done by the following command:
 
 ```bash
-trestle compile
+junokit compile
 ```
 
 #### Running scripts on Localnet
@@ -1015,5 +1015,5 @@ trestle compile
 To run any script on localnet open a new terminal and execute:
 
 ```bash
-trestle run scripts/sample-script.js
+junokit run scripts/sample-script.js
 ```
