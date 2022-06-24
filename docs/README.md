@@ -1,7 +1,7 @@
 ---
 home: true
 heroImage: /images/snow.jpg
-heroText: Trestle
+heroText: Junokit
 tagline: Smart contracts development framework
 actionText: Get Started →
 actionLink: /getting-started/

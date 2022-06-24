@@ -1,5 +1,5 @@
 module.exports = {
-    title: 'Arufa-Research/Trestle',
+    title: 'Arufa-Research/Junokit',
     description: 'Documentation',
     themeConfig: {
         overrideTheme: 'dark',
