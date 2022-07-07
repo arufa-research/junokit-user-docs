@@ -1,10 +1,10 @@
-### Using localnet with junokit
+# Using localnet with junokit
 
-#### Setup the Local Developer Testnet
+## Setup the Local Developer Testnet
 
 In this document you'll find information on setting up a local Juno Network.
 
-#### Running the docker container
+## Running the docker container
 
 The developer blockchain is configured to run inside a docker container. Install Docker for your environment .
 Open a terminal window and change to your project directory. Then start JunoNetwork from here on(Keep juno version updated wth juno repo. It is currently 5.0.0):
@@ -29,7 +29,7 @@ we need to copy the name, address and mnemonic info of the account that we get o
 
 The docker container can be stopped by CTRL+C. At this point you're running a local JunoNetwork full-node. 
 
-#### Checking the node info
+## Checking the node info
 
 We can then check the node info of the node. Open a new terminal :
 
@@ -40,7 +40,7 @@ ChainId: uni-2
 Block height: 1358994
 ```
 
-#### Compile the contract
+## Compile the contract
 
 Then we need to compile the contract. This can be done by the following command:
 
@@ -48,7 +48,7 @@ Then we need to compile the contract. This can be done by the following command:
 junokit compile
 ```
 
-#### Running scripts on Localnet
+## Running scripts on Localnet
 
 To run any script on localnet open a new terminal and execute:
 

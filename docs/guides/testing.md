@@ -1,16 +1,16 @@
-### Testing contracts
+# Testing contracts
 
 Contracts can be tested in two ways, one by writing rust tests in the `contract.rs` file itself, and other way is to write a mocha test script that interacts with deployed contract and assert the returned values. There are examples for both in the `sample-project` created after `junokit init` step.
 
-#### Rust tests
+## Rust tests
 
 These tests can be run by going into the contract's directory having `Cargo.toml` file and running the command `cargo test`.
 
-#### Client interaction tests
+## Client interaction tests
 
 These tests can be run by running the command `junokit test --network <network-name>`.
 
-#### Test scripts
+## Test scripts
 
 junokit has support for user to write tests on top of js interactions with the deployed contract instance. These scripts are stored in the `test/` directory in the project's root directory.
 
@@ -116,7 +116,7 @@ use(junokitChai);
 
 **Note:** It is fine to have `deploy`, `instantiate` in each test as they are not executed multiple times for a given contract. Moving these steps in the `setup()` method is fine.
 
-#### Chai matchers
+## Chai matchers
 
 A set of chai matchers, makes your test easy to write and read. Before you can start using the matchers, you have to tell chai to use the junokitChai plugin:
 

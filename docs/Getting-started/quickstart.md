@@ -1,17 +1,5 @@
 
-
-## Overview
-
-Junokit is a development framework for building juno contracts. The aim of the project is to make juno contracts development process simple, efficient and scalable. User can focus on logic of juno contract and not much about further steps in development. It facilitates features such as initiating project repo from contract templates, easy compilation of contracts, deployment, Interacting with contracts using schema and contract testing framework.
-
-## Installation
-
-Junokit can be installed using `npm` or `yarn` using below commands:
-
-+    Using Yarn: `yarn global add junokit`
-+    Using NPM: `npm install -g junokit`
-
-## Quick Start
+# Quick Start
 
 This guide will explore the basics of creating a simple Junokit project.
 
@@ -66,7 +54,7 @@ The generated directory will have the following initial structure:
 
 The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory can contain `.js` and `.ts` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory can contain `.js` and `.ts` scripts to run tests for the deployed contracts.
 
-#### Listing tasks
+## Listing tasks
 
 To see the possible tasks (commands) that are available, run `junokit` in your project's folder:
 
@@ -152,7 +140,7 @@ module.exports = {
 
 **Note** that the accounts mentioned above are just a sample, don't use them in mainnet as it can lead to capital loss.
 
-#### Compiling contracts
+## Compiling contracts
 
 To compile the contracts, use command `junokit compile`. This will compile all the contracts in the project. To compile only one contracts or a subset of all contracts in the project, use command `junokit compile <contract-source-dir>`. To skip schema generation while compiling use `junokit compile --skip-schema`.
 
@@ -334,7 +322,7 @@ Copying file query_msg.json from contracts/schema to artifacts/schema/cw_erc20
 
 This command will generate compiled `.wasm` files in `artifacts/contracts/` dir and schema `.json` files in `artifacts/schema/` dir.
 
-#### Running user scripts
+## Running user scripts
 
 User scripts are a way to define the flow of interacting with contracts on some network in form of a script. These scripts can be used to deploy a contract, query/transact with the contract.
 
@@ -394,7 +382,7 @@ The script above deploys, inits contract `sample-project` using account `account
 
 For the above script to be able to run, an account with name `account_0` must be present in `junokit.config.js` and contract artifacts (compiled `.wasm` and schema `.json` files) in `artifacts/` dir must be present for contract `sample-project`.
 
-#### Running test scripts
+## Running test scripts
 
 Test scripts are used to test the contract after deploying it to the network and asserting on the interactions with the contract instance.
 
@@ -459,7 +447,7 @@ junokit> config
 
 When REPL is opened, `junokit` library is already imported, use `junokit.` to access classes and functions from the library. junokit Runtime Environment can be access using `env` variable and `junokit.config.js` data can be accessed using `config` variable.
 
-#### Get node information
+## Get node information
 
 Node information can be fetched using `junokit node-info --network <network-name>` as follows:
 
@@ -470,7 +458,6 @@ ChainId: uni-2
 Block height: 1358994
 ```
 
-
-#### Cleanup artifacts
+## Cleanup artifacts
 
 To clear artifacts data, use `junokit clean` and to clean artifacts for only one contract, use `junokit clean <contract-name>`.

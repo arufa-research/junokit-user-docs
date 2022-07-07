@@ -1,10 +1,10 @@
 
 
-### Setting up a project
+# Setting up a project
 
 Project setup can be broken down to 3 steps broadly, which are boiler plate generation, updating project name and updating `junokit.config.js` file.
 
-#### Boilerplate code
+## Boilerplate code
 
 Use command `junokit init <project-name>` to generate boilerplate code. Use command `junokit init <project-name> <template-name>` to generate boilerplate code using a particular template (template names can be found from repository `https://github.com/arufa-research/junokit-templates`).
 
@@ -55,7 +55,7 @@ The generated directory will have the following initial structure:
 
 The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory can contain `.js` and `.ts` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory can contain `.js` and `.ts` scripts to run tests for the deployed contracts.
 
-#### Updating name of contract
+## Updating name of contract
 
 Replace appearances of `sample-project` and `sample_project` from following files to your project name.
 
@@ -102,7 +102,7 @@ artifacts/
 2 directories, 7 files
 ```
 
-#### junokit config
+## junokit config
 
 junokit uses config file `junokit.config.js` to execute tasks for the given project. Initial contents of `junokit.config.js` file are explained below:
 

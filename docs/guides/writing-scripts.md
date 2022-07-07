@@ -1,6 +1,6 @@
-### Writing scripts
+# Writing scripts
 
-#### Sample script walkthrough
+## Sample script walkthrough
 
 Junokit boilerplate code has sample script `scripts/sample-script.js` with following content: 
 
@@ -127,7 +127,7 @@ async function run () {
 module.exports = { default: run };
 ```
 
-#### junokit Runtime Environment
+## junokit Runtime Environment
 
 junokit runtime environment is used internally by junokit. It is created when a junokit task is executed using bash command `junokit ...`. It can be accessed in REPL using variable `env`. It has following parameters:
 
@@ -139,7 +139,7 @@ junokit runtime environment is used internally by junokit. It is created when a 
 
 + **network**: Details of the network currently being used.
 
-#### Contract class
+## Contract class
 
 Contract class is used to create an object which does operations related to a contract such as deploying, interacting with network. One can also list query, execute methods available for the contract using this class.
 
@@ -219,7 +219,7 @@ junokit> contract.query
 { Balance: [Function (anonymous), Allowance: [Function (anonymous)] }
 ```
 
-#### getAccountByName
+## getAccountByName
 
 In the sample `junokit.config.js` file, the accounts are defined as below:
 
@@ -251,7 +251,7 @@ console.log(account_0.address); // juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5
 console.log(account_0.mnemonic); // omit sphere nurse rib tribe suffer web account catch brain hybrid zero act gold coral shell voyage matter nose stick crucial fog judge text
 ```
 
-#### createAccounts
+## createAccounts
 
 This method is used to generate new accounts and then can be filled with some balance using a testnet faucet `https://stakely.io/en/faucet/juno` (faucet are only for testnets). 
 
@@ -262,7 +262,7 @@ const res = await createAccounts(1); // array of one account object
 const res = await createAccounts(3);  // array of three account objects
 ```
 
-#### Checkpoints
+## Checkpoints
 
 Checkpoints store the metadata of contract instance on the network. It stores the deploy metadata (codeId, contractCodeHash, deployTimestamp) and instantiate metadata (contractAddress, instantiateTimestamp). This comes handy when a script is run which deploys, inits and does some interactions with the contracts. 
 
