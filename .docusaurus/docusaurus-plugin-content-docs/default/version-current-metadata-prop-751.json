@@ -1,0 +1,139 @@
+{
+  "pluginId": "default",
+  "version": "current",
+  "label": "Next",
+  "banner": null,
+  "badge": false,
+  "className": "docs-version-current",
+  "isLast": true,
+  "docsSidebars": {
+    "tutorialSidebar": [
+      {
+        "type": "link",
+        "label": "Introduction",
+        "href": "/docs/intro",
+        "docId": "intro"
+      },
+      {
+        "type": "category",
+        "label": "Getting-started",
+        "collapsible": true,
+        "collapsed": true,
+        "items": [
+          {
+            "type": "link",
+            "label": "Installation",
+            "href": "/docs/Getting-started/installation",
+            "docId": "Getting-started/installation"
+          },
+          {
+            "type": "link",
+            "label": "Overview",
+            "href": "/docs/Getting-started/overview",
+            "docId": "Getting-started/overview"
+          },
+          {
+            "type": "link",
+            "label": "Quick Start",
+            "href": "/docs/Getting-started/quickstart",
+            "docId": "Getting-started/quickstart"
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Guides",
+        "collapsible": true,
+        "collapsed": true,
+        "items": [
+          {
+            "type": "link",
+            "label": "Compiling your contracts",
+            "href": "/docs/Guides/compiling-contracts",
+            "docId": "Guides/compiling-contracts"
+          },
+          {
+            "type": "link",
+            "label": "Setting up a project",
+            "href": "/docs/Guides/project",
+            "docId": "Guides/project"
+          },
+          {
+            "type": "link",
+            "label": "Testing contracts",
+            "href": "/docs/Guides/testing",
+            "docId": "Guides/testing"
+          },
+          {
+            "type": "link",
+            "label": "Using localnet with junokit",
+            "href": "/docs/Guides/using-localenet",
+            "docId": "Guides/using-localenet"
+          },
+          {
+            "type": "link",
+            "label": "Writing scripts",
+            "href": "/docs/Guides/writing-scripts",
+            "docId": "Guides/writing-scripts"
+          }
+        ]
+      }
+    ]
+  },
+  "docs": {
+    "Getting-started/installation": {
+      "id": "Getting-started/installation",
+      "title": "Installation",
+      "description": "Junokit can be installed using npm or yarn using below commands:",
+      "sidebar": "tutorialSidebar"
+    },
+    "Getting-started/overview": {
+      "id": "Getting-started/overview",
+      "title": "Overview",
+      "description": "Junokit is a development framework for building juno contracts. The aim of the project is to make juno contracts development process simple, efficient and scalable. User can focus on logic of juno contract and not much about further steps in development. It facilitates features such as initiating project repo from contract templates, easy compilation of contracts, deployment, Interacting with contracts using schema and contract testing framework.",
+      "sidebar": "tutorialSidebar"
+    },
+    "Getting-started/quickstart": {
+      "id": "Getting-started/quickstart",
+      "title": "Quick Start",
+      "description": "This guide will explore the basics of creating a simple Junokit project.",
+      "sidebar": "tutorialSidebar"
+    },
+    "Guides/compiling-contracts": {
+      "id": "Guides/compiling-contracts",
+      "title": "Compiling your contracts",
+      "description": "Compiling contracts can be done using the command junokit compile.",
+      "sidebar": "tutorialSidebar"
+    },
+    "Guides/project": {
+      "id": "Guides/project",
+      "title": "Setting up a project",
+      "description": "Project setup can be broken down to 3 steps broadly, which are boiler plate generation, updating project name and updating junokit.config.js file.",
+      "sidebar": "tutorialSidebar"
+    },
+    "Guides/testing": {
+      "id": "Guides/testing",
+      "title": "Testing contracts",
+      "description": "Contracts can be tested in two ways, one by writing rust tests in the contract.rs file itself, and other way is to write a mocha test script that interacts with deployed contract and assert the returned values. There are examples for both in the sample-project created after junokit init step.",
+      "sidebar": "tutorialSidebar"
+    },
+    "Guides/using-localenet": {
+      "id": "Guides/using-localenet",
+      "title": "Using localnet with junokit",
+      "description": "Setup the Local Developer Testnet",
+      "sidebar": "tutorialSidebar"
+    },
+    "Guides/writing-scripts": {
+      "id": "Guides/writing-scripts",
+      "title": "Writing scripts",
+      "description": "Sample script walkthrough",
+      "sidebar": "tutorialSidebar"
+    },
+    "intro": {
+      "id": "intro",
+      "title": "Introduction",
+      "description": "This section gives overview of the most comman use cases. Read Getting-started and Guides sections for a detailed documentation.",
+      "sidebar": "tutorialSidebar"
+    }
+  }
+}

@@ -12,7 +12,7 @@ This section gives overview of the most comman use cases. Read `Getting-started`
 $ junokit init "project-name"
 ```
 
-This will create a directory "project-name" inside current directory with boiler-plate code. The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory contains  `.js` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory contains `.js` scripts to run tests for the deployed contracts.
+This will create a directory "project-name" inside current directory with boiler-plate code. The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory contains  `.ts` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory contains `.ts` scripts to run tests for the deployed contracts.
 
 ## Listing Tasks
 
@@ -52,5 +52,5 @@ This will remove specific files related to that contract.
 
 ## Running user scripts
 
-User scripts are a way to define the flow of interacting with contracts on some network in form of a script. These scripts can be used to deploy a contract, query/transact with the contract.A sample script scripts/sample-script.js is available in the boilerplate.
+User scripts are a way to define the flow of interacting with contracts on some network in form of a script. These scripts can be used to deploy a contract, query/transact with the contract.A sample script `scripts/sample-script.ts` is available in the boilerplate.
 

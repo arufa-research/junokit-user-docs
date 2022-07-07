@@ -97,7 +97,7 @@ This is the list of built-in tasks. This is your starting point to find out what
 If you take a look at the `junokit.config.js` file, you will find :
 
 ```js
-const accounts = [
+const testnet_accounts = [
   {
     name: 'account_0',
     address: 'juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5',
@@ -109,18 +109,27 @@ const accounts = [
     mnemonic: 'student prison fresh dwarf ecology birth govern river tissue wreck hope autumn basic trust divert dismiss buzz play pistol focus long armed flag bicycle'
   }
 ];
+
+const loclnet_Accounts = [
+  {
+    name: 'account_0',
+    address: 'juno16g2rahf5846rxzp3fwlswy08fz8ccuwk03k57y',
+    mnemonic: 'clip hire initial neck maid actor venue client foam budget lock catalog sweet steak waste crater broccoli pipe steak sister coyote moment obvious choose'
+  }
+];
 // TODO: update fixture tests
 const networks = {
   localnet: {
-    endpoint: 'http://localhost:26657/'
+    endpoint: 'http://localhost:26657/',
+    accounts: loclnet_Accounts,
   },
   // uni-2
   testnet: {
     endpoint: 'https://rpc.uni.juno.deuslabs.fi/',//https://lcd.uni.juno.deuslabs.fi/
-    chainId: 'uni-2',
+    chainId: 'uni-3',
     trustNode: true,
     keyringBackend: 'test',
-    accounts: accounts,
+    accounts: testnet_accounts,
   },
 };
 
@@ -326,53 +335,41 @@ This command will generate compiled `.wasm` files in `artifacts/contracts/` dir 
 
 User scripts are a way to define the flow of interacting with contracts on some network in form of a script. These scripts can be used to deploy a contract, query/transact with the contract.
 
-A sample script `scripts/sample-script.js` is available in the boilerplate. Contents of the script is as follows:
+A sample script `scripts/sample-script.ts` is available in the boilerplate. Contents of the script is as follows:
 
 ```js
-const { Contract, getAccountByName, getLogs } = require("junokit");
+import { getAccountByName } from "junokit";
+
+import { CounterContract } from "../artifacts/typescript_schema/Counter";
 
 async function run() {
+  const runTs = String(new Date());
   const contract_owner = getAccountByName("account_0");
-  const other = getAccountByName("account_1");
-  const contract = new Contract("cw_erc20");
-  await contract.setUpclient();
-  await contract.parseSchema();
+  const counter_contract = new CounterContract();
+  await counter_contract.setUpclient();
 
   console.log("Client setup done!! ");
 
-  const deploy_response = await contract.deploy(
+  const deploy_response = await counter_contract.deploy(
     contract_owner,
     { // custom fees
-      amount: [{ amount: "750000", denom: "ujunox" }],
-      gas: "3000000",
+      amount: [{ amount: "900000", denom: "ujunox" }],
+      gas: "35000000",
     }
   );
   console.log(deploy_response);
-
-  const contract_info = await contract.instantiate(
+  const contract_info = await counter_contract.instantiate(
     {
-      "name": "ERC", "symbol": "ER", "decimals": 10,
-      "initial_balances": [{
-        "address": contract_owner.account.address,
-        "amount": "100000000"
-      }]
-    }, "deploy test", contract_owner);
+      "count": 102
+    }, `deploy test ${runTs}`, contract_owner);
   console.log(contract_info);
 
-  let balance_before = await contract.query.balance({ "address": contract_owner.account.address });
-  console.log(balance_before);
+  const inc_response = await counter_contract.increment({account: contract_owner});
+  console.log(inc_response);
 
-  let transfer_response = await contract.tx.transfer(
-    { account: contract_owner },
-    {
-      recipient: other.account.address,
-      amount: "50000000"
-    }
-  );
-  console.log(transfer_response);
+  const response = await counter_contract.getCount();
+  console.log(response);
 
-  let balance_after = await contract.query.balance({ "address": contract_owner.account.address });
-  console.log(balance_after);
 }
 
 module.exports = { default: run };
@@ -386,38 +383,41 @@ For the above script to be able to run, an account with name `account_0` must be
 
 Test scripts are used to test the contract after deploying it to the network and asserting on the interactions with the contract instance.
 
-A sample test script `test/sample-test.js` is available in the boilerplate. Contents of the script is as follows:
+A sample test script `test/sample-test.ts` is available in the boilerplate. Contents of the script is as follows:
 
 ```js
-const { use } = require("chai");
-const { Contract, getAccountByName, junokitChai } = require("junokit");
+import { use } from "chai";
+import { getAccountByName, junokitChai } from "junokit";
+
+import { CounterContract } from "../artifacts/typescript_schema/Counter";
 
 use(junokitChai);
 
-describe("erc-20", () => {
+describe("counter", () => {
 
   async function setup() {
-    const contract_owner = getAccountByName("account_1");
-    const other = getAccountByName("account_0");
-    const contract = new Contract("cw_erc20");
-    await contract.parseSchema();
+    const contract_owner = getAccountByName("account_0");
+    const counter_contract = new CounterContract();
+    await counter_contract.setUpclient();
 
-    return { contract_owner, other, contract };
+    return { contract_owner, counter_contract };
   }
 
   it("deploy and init", async () => {
-    const { contract_owner, other, contract } = await setup();
-    const deploy_response = await contract.deploy(contract_owner);
+    const runTs = String(new Date());
+    const { contract_owner, counter_contract } = await setup();
+    const deploy_response = await counter_contract.deploy(
+      contract_owner,
+      { // custom fees
+        amount: [{ amount: "90000", denom: "ujunox" }],
+        gas: "35000000",
+      }
+    );
     console.log(deploy_response);
-
-    const contract_info = await contract.instantiate(
-    {
-      "name": "ERC", "symbol": "ER", "decimals": 10,
-      "initial_balances": [{
-        "address": contract_owner.account.address,
-        "amount": "100000000"
-      }]
-    }, "deploy test", contract_owner);
+    const contract_info = await counter_contract.instantiate(
+      {
+        "count": 102
+      }, `deploy test ${runTs}`, contract_owner);
     console.log(contract_info);
   });
 });
@@ -437,7 +437,7 @@ junokit> config
   name: 'default',
   config: {
     endpoint: 'https://rpc.uni.juno.deuslabs.fi/',
-    chainId: 'uni-2',
+    chainId: 'uni-3',
     trustNode: true,
     keyringBackend: 'test',
     accounts: [ [Object], [Object] ]
@@ -454,7 +454,7 @@ Node information can be fetched using `junokit node-info --network <network-name
 ```bash
 $ junokit node-info --network testnet
 Network: testnet
-ChainId: uni-2
+ChainId: uni-3
 Block height: 1358994
 ```
 

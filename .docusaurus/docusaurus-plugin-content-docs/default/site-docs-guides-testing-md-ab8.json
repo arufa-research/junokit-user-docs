@@ -1,0 +1,24 @@
+{
+  "unversionedId": "Guides/testing",
+  "id": "Guides/testing",
+  "title": "Testing contracts",
+  "description": "Contracts can be tested in two ways, one by writing rust tests in the contract.rs file itself, and other way is to write a mocha test script that interacts with deployed contract and assert the returned values. There are examples for both in the sample-project created after junokit init step.",
+  "source": "@site/docs/Guides/testing.md",
+  "sourceDirName": "Guides",
+  "slug": "/Guides/testing",
+  "permalink": "/docs/Guides/testing",
+  "draft": false,
+  "editUrl": "https://github.com/arufa-research/junokit-user-docs/docs/Guides/testing.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Setting up a project",
+    "permalink": "/docs/Guides/project"
+  },
+  "next": {
+    "title": "Using localnet with junokit",
+    "permalink": "/docs/Guides/using-localenet"
+  }
+}

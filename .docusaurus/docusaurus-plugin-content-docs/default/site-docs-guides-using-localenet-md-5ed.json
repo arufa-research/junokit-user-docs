@@ -1,0 +1,24 @@
+{
+  "unversionedId": "Guides/using-localenet",
+  "id": "Guides/using-localenet",
+  "title": "Using localnet with junokit",
+  "description": "Setup the Local Developer Testnet",
+  "source": "@site/docs/Guides/using-localenet.md",
+  "sourceDirName": "Guides",
+  "slug": "/Guides/using-localenet",
+  "permalink": "/docs/Guides/using-localenet",
+  "draft": false,
+  "editUrl": "https://github.com/arufa-research/junokit-user-docs/docs/Guides/using-localenet.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Testing contracts",
+    "permalink": "/docs/Guides/testing"
+  },
+  "next": {
+    "title": "Writing scripts",
+    "permalink": "/docs/Guides/writing-scripts"
+  }
+}

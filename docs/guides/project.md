@@ -46,9 +46,9 @@ The generated directory will have the following initial structure:
 ├── junokit.config.js
 ├── README.md
 ├── scripts
-│   └── sample-script.js
+│   └── sample-script.ts
 └── test
-    └── sample-test.js
+    └── sample-test.ts
 
 5 directories, 15 files
 ```
@@ -64,7 +64,7 @@ $ grep -r "sample-project"
 package.json:  "name": "sample-project",
 contracts/Cargo.lock:name = "sample-project"
 contracts/Cargo.toml:name = "sample-project"
-scripts/sample-script.js:  const contract = new Contract('sample-project');
+scripts/sample-script.ts:  const contract = new Contract('sample-project');
 ```
 
 ```bash
@@ -82,7 +82,7 @@ contracts/Cargo.lock:name = "yellow"
 contracts/Cargo.toml:name = "yellow"
 contracts/examples/schema.rs:use yellow::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, BalanceResponse, AllowanceResponse};
 contracts/examples/schema.rs:use yellow::state::Constants;
-scripts/sample-script.js:  const contract = new Contract('yellow', runtimeEnv);
+scripts/sample-script.ts:  const contract = new Contract('yellow', runtimeEnv);
 ```
 
 Now compiling using `junokit compile` would create following structure in `artifacts/` dir:
@@ -98,8 +98,10 @@ artifacts/
     └── execute_msg.json
     └── instantiate_msg.json
     └── query_msg.json
+└── typescript_schema
+    └── Yellow.ts
 
-2 directories, 7 files
+3 directories, 8 files
 ```
 
 ## junokit config
@@ -120,7 +122,7 @@ networks: {
   // uni-2
   testnet: {
     endpoint: 'https://rpc.uni.juno.deuslabs.fi/',//https://lcd.uni.juno.deuslabs.fi/
-    chainId: 'uni-2',
+    chainId: 'uni-3',
     trustNode: true,
     keyringBackend: 'test',
     accounts: accounts,
@@ -146,7 +148,7 @@ networks: {
 + mnemonic: Mnemonic for the account. Do not push this value to a public repository.
 
 ```js
-const accounts = [
+const testnet_accounts = [
   {
     name: 'account_0',
     address: 'juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5',
