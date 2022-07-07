@@ -4,44 +4,53 @@ sidebar_position: 1
 
 # Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+This section gives overview of the most comman use cases. Read `Getting-started` and `Guides` sections for a detailed documentation.
 
-## Getting Started
-
-Get started by **creating a new site**.
-
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
-
-### What you'll need
-
-- [Node.js](https://nodejs.org/en/download/) version 14 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
-
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
+## Initialize a project
 
 ```bash
-npm init docusaurus@latest my-website classic
+$ junokit init "project-name"
 ```
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+This will create a directory "project-name" inside current directory with boiler-plate code. The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory contains  `.js` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory contains `.js` scripts to run tests for the deployed contracts.
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+## Listing Tasks
 
-## Start your site
-
-Run the development server:
+To see the possible tasks (commands) that are available, go to project's folder. 
 
 ```bash
-cd my-website
-npm run start
+$ junokit
+``` 
+
+This is the list of built-in tasks. This is your starting point to find out what tasks are available to run.
+
+## Compile the project
+
+To compile the contracts, Go to project directory:
+
+```bash
+$ cd "project-name"
+$ junokit compile
 ```
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+This command will generate compiled .wasm files in artifacts/contracts/ dir and schema .json files in artifacts/schema/ dir.
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+## Cleanup Artifacts
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+To clear artifacts data, use
+
+```bash
+$ junokit clean
+``` 
+This will remove the artifacts directory completely. To clean artifacts for only one contract, use
+
+```bash
+$ junokit clean "contract-name"
+``` 
+This will remove specific files related to that contract.
+
+
+## Running user scripts
+
+User scripts are a way to define the flow of interacting with contracts on some network in form of a script. These scripts can be used to deploy a contract, query/transact with the contract.A sample script scripts/sample-script.js is available in the boilerplate.
+
