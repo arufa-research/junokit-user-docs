@@ -1,17 +1,5 @@
 
-
-## Overview
-
-Junokit is a development framework for building juno contracts. The aim of the project is to make juno contracts development process simple, efficient and scalable. User can focus on logic of juno contract and not much about further steps in development. It facilitates features such as initiating project repo from contract templates, easy compilation of contracts, deployment, Interacting with contracts using schema and contract testing framework.
-
-## Installation
-
-Junokit can be installed using `npm` or `yarn` using below commands:
-
-+    Using Yarn: `yarn global add junokit`
-+    Using NPM: `npm install -g junokit`
-
-## Quick Start
+# Quick Start
 
 This guide will explore the basics of creating a simple Junokit project.
 
@@ -64,9 +52,9 @@ The generated directory will have the following initial structure:
 5 directories, 15 files
 ```
 
-The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory can contain `.js` and `.ts` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory can contain `.js` and `.ts` scripts to run tests for the deployed contracts.
+The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory can contain `.ts` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory can contain `.ts` scripts to run tests for the deployed contracts.
 
-#### Listing tasks
+## Listing tasks
 
 To see the possible tasks (commands) that are available, run `junokit` in your project's folder:
 
@@ -109,7 +97,7 @@ This is the list of built-in tasks. This is your starting point to find out what
 If you take a look at the `junokit.config.js` file, you will find :
 
 ```js
-const accounts = [
+const testnet_accounts = [
   {
     name: 'account_0',
     address: 'juno1evpfprq0mre5n0zysj6cf74xl6psk96gus7dp5',
@@ -121,18 +109,27 @@ const accounts = [
     mnemonic: 'student prison fresh dwarf ecology birth govern river tissue wreck hope autumn basic trust divert dismiss buzz play pistol focus long armed flag bicycle'
   }
 ];
+
+const loclnet_Accounts = [
+  {
+    name: 'account_0',
+    address: 'juno16g2rahf5846rxzp3fwlswy08fz8ccuwk03k57y',
+    mnemonic: 'clip hire initial neck maid actor venue client foam budget lock catalog sweet steak waste crater broccoli pipe steak sister coyote moment obvious choose'
+  }
+];
 // TODO: update fixture tests
 const networks = {
   localnet: {
-    endpoint: 'http://localhost:26657/'
+    endpoint: 'http://localhost:26657/',
+    accounts: loclnet_Accounts,
   },
   // uni-2
   testnet: {
     endpoint: 'https://rpc.uni.juno.deuslabs.fi/',//https://lcd.uni.juno.deuslabs.fi/
-    chainId: 'uni-2',
+    chainId: 'uni-3',
     trustNode: true,
     keyringBackend: 'test',
-    accounts: accounts,
+    accounts: testnet_accounts,
   },
 };
 
@@ -152,7 +149,7 @@ module.exports = {
 
 **Note** that the accounts mentioned above are just a sample, don't use them in mainnet as it can lead to capital loss.
 
-#### Compiling contracts
+## Compiling contracts
 
 To compile the contracts, use command `junokit compile`. This will compile all the contracts in the project. To compile only one contracts or a subset of all contracts in the project, use command `junokit compile <contract-source-dir>`. To skip schema generation while compiling use `junokit compile --skip-schema`.
 
@@ -334,57 +331,45 @@ Copying file query_msg.json from contracts/schema to artifacts/schema/cw_erc20
 
 This command will generate compiled `.wasm` files in `artifacts/contracts/` dir and schema `.json` files in `artifacts/schema/` dir.
 
-#### Running user scripts
+## Running user scripts
 
 User scripts are a way to define the flow of interacting with contracts on some network in form of a script. These scripts can be used to deploy a contract, query/transact with the contract.
 
-A sample script `scripts/sample-script.js` is available in the boilerplate. Contents of the script is as follows:
+A sample script `scripts/sample-script.ts` is available in the boilerplate. Contents of the script is as follows:
 
 ```js
-const { Contract, getAccountByName, getLogs } = require("junokit");
+import { getAccountByName } from "junokit";
+
+import { CounterContract } from "../artifacts/typescript_schema/Counter";
 
 async function run() {
+  const runTs = String(new Date());
   const contract_owner = getAccountByName("account_0");
-  const other = getAccountByName("account_1");
-  const contract = new Contract("cw_erc20");
-  await contract.setUpclient();
-  await contract.parseSchema();
+  const counter_contract = new CounterContract();
+  await counter_contract.setUpclient();
 
   console.log("Client setup done!! ");
 
-  const deploy_response = await contract.deploy(
+  const deploy_response = await counter_contract.deploy(
     contract_owner,
     { // custom fees
-      amount: [{ amount: "750000", denom: "ujunox" }],
-      gas: "3000000",
+      amount: [{ amount: "900000", denom: "ujunox" }],
+      gas: "35000000",
     }
   );
   console.log(deploy_response);
-
-  const contract_info = await contract.instantiate(
+  const contract_info = await counter_contract.instantiate(
     {
-      "name": "ERC", "symbol": "ER", "decimals": 10,
-      "initial_balances": [{
-        "address": contract_owner.account.address,
-        "amount": "100000000"
-      }]
-    }, "deploy test", contract_owner);
+      "count": 102
+    }, `deploy test ${runTs}`, contract_owner);
   console.log(contract_info);
 
-  let balance_before = await contract.query.balance({ "address": contract_owner.account.address });
-  console.log(balance_before);
+  const inc_response = await counter_contract.increment({account: contract_owner});
+  console.log(inc_response);
 
-  let transfer_response = await contract.tx.transfer(
-    { account: contract_owner },
-    {
-      recipient: other.account.address,
-      amount: "50000000"
-    }
-  );
-  console.log(transfer_response);
+  const response = await counter_contract.getCount();
+  console.log(response);
 
-  let balance_after = await contract.query.balance({ "address": contract_owner.account.address });
-  console.log(balance_after);
 }
 
 module.exports = { default: run };
@@ -394,42 +379,45 @@ The script above deploys, inits contract `sample-project` using account `account
 
 For the above script to be able to run, an account with name `account_0` must be present in `junokit.config.js` and contract artifacts (compiled `.wasm` and schema `.json` files) in `artifacts/` dir must be present for contract `sample-project`.
 
-#### Running test scripts
+## Running test scripts
 
 Test scripts are used to test the contract after deploying it to the network and asserting on the interactions with the contract instance.
 
-A sample test script `test/sample-test.js` is available in the boilerplate. Contents of the script is as follows:
+A sample test script `test/sample-test.ts` is available in the boilerplate. Contents of the script is as follows:
 
 ```js
-const { use } = require("chai");
-const { Contract, getAccountByName, junokitChai } = require("junokit");
+import { use } from "chai";
+import { getAccountByName, junokitChai } from "junokit";
+
+import { CounterContract } from "../artifacts/typescript_schema/Counter";
 
 use(junokitChai);
 
-describe("erc-20", () => {
+describe("counter", () => {
 
   async function setup() {
-    const contract_owner = getAccountByName("account_1");
-    const other = getAccountByName("account_0");
-    const contract = new Contract("cw_erc20");
-    await contract.parseSchema();
+    const contract_owner = getAccountByName("account_0");
+    const counter_contract = new CounterContract();
+    await counter_contract.setUpclient();
 
-    return { contract_owner, other, contract };
+    return { contract_owner, counter_contract };
   }
 
   it("deploy and init", async () => {
-    const { contract_owner, other, contract } = await setup();
-    const deploy_response = await contract.deploy(contract_owner);
+    const runTs = String(new Date());
+    const { contract_owner, counter_contract } = await setup();
+    const deploy_response = await counter_contract.deploy(
+      contract_owner,
+      { // custom fees
+        amount: [{ amount: "90000", denom: "ujunox" }],
+        gas: "35000000",
+      }
+    );
     console.log(deploy_response);
-
-    const contract_info = await contract.instantiate(
-    {
-      "name": "ERC", "symbol": "ER", "decimals": 10,
-      "initial_balances": [{
-        "address": contract_owner.account.address,
-        "amount": "100000000"
-      }]
-    }, "deploy test", contract_owner);
+    const contract_info = await counter_contract.instantiate(
+      {
+        "count": 102
+      }, `deploy test ${runTs}`, contract_owner);
     console.log(contract_info);
   });
 });
@@ -449,7 +437,7 @@ junokit> config
   name: 'default',
   config: {
     endpoint: 'https://rpc.uni.juno.deuslabs.fi/',
-    chainId: 'uni-2',
+    chainId: 'uni-3',
     trustNode: true,
     keyringBackend: 'test',
     accounts: [ [Object], [Object] ]
@@ -459,18 +447,17 @@ junokit> config
 
 When REPL is opened, `junokit` library is already imported, use `junokit.` to access classes and functions from the library. junokit Runtime Environment can be access using `env` variable and `junokit.config.js` data can be accessed using `config` variable.
 
-#### Get node information
+## Get node information
 
 Node information can be fetched using `junokit node-info --network <network-name>` as follows:
 
 ```bash
 $ junokit node-info --network testnet
 Network: testnet
-ChainId: uni-2
+ChainId: uni-3
 Block height: 1358994
 ```
 
-
-#### Cleanup artifacts
+## Cleanup artifacts
 
 To clear artifacts data, use `junokit clean` and to clean artifacts for only one contract, use `junokit clean <contract-name>`.
