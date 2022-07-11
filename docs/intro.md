@@ -54,3 +54,5 @@ This will remove specific files related to that contract.
 
 User scripts are a way to define the flow of interacting with contracts on some network in form of a script. These scripts can be used to deploy a contract, query/transact with the contract.A sample script `scripts/sample-script.ts` is available in the boilerplate.
 
+Run `yarn build` before running scripts, this will generate a `build/` directory in the project's directory with compiled `.js` files to be used by junokit.
+

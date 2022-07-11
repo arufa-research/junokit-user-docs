@@ -53,7 +53,7 @@ The generated directory will have the following initial structure:
 5 directories, 15 files
 ```
 
-The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory can contain `.js` and `.ts` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory can contain `.js` and `.ts` scripts to run tests for the deployed contracts.
+The `contracts/` directory has all the rust files for the contract logic. `scripts/` directory can contain `.ts` scripts that user can write according to the use case, a sample script has been added to give some understanding of how a user script should look like. `test/` directory can contain `.ts` scripts to run tests for the deployed contracts.
 
 ## Updating name of contract
 
